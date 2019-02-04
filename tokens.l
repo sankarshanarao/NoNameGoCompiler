@@ -43,6 +43,7 @@ if                          { printf("TKIF\n"); } // keyword if
 func                        { printf("TKFUNC\n"); }   // keyword func
 import                      { printf("TKIMPORT\n"); }   // keyword import
 main                        { printf("TKMAIN\n"); } // keyword main
+package                     { printf("TKPACKAGE"); }    // keyword package
 
 
 true                        { printf("BoolTrue\n"); }   // literal bool

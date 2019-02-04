@@ -1,0 +1,57 @@
+program:
+    PackageDefinition
+    Imports
+    Declaration
+    MainFunc
+    Declaration;
+
+PackageDefinition:
+    TKPACKAGE TKMAIN
+    | TKPACKAGE TIDENTIFIER
+    ;
+
+Imports:
+    SingleImports
+    | MultiImports
+    ;
+
+SingleImports:
+    SingleImports TKIMPORT String "\n"
+    ;
+
+MultiImports:
+    ;
+ 
+Declaration:
+    Declaration VariableDecla "\n"
+    ;
+
+MainFunc:
+    TKFUNC TKMAIN "(" ")" CompoundBloc
+    ;
+
+CompoundBloc:
+    TLBRACE  "\n"  
+        StatementList "\n" 
+    TRBRACE
+    ;
+
+StatementList:
+    StatementList Statement
+    ;
+
+Statement:
+    Declaration
+    ;
+
+VariableDecla:
+    TKVAR TEQUAL Literal "\n"
+    ;
+
+Literal:
+    BoolTrue
+    | BoolFalse
+    | String
+    | Float
+    | Int
+    ;
