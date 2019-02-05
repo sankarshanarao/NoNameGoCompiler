@@ -1,8 +1,9 @@
 %{
 #include <string>
 #include <iostream>
-#define SAVE_TOKEN yyval.string= new std::string(yytext,yyleng)
-#define TOKEN(t) (yyval.token=t)
+#include "parser.hpp"
+#define SAVE_TOKEN yylval.string= new std::string(yytext,yyleng)
+#define TOKEN(t) (yylval.token=t)
 %}
 
 alpha [a-zA-Z]
@@ -33,7 +34,7 @@ digit [0-9]
 "{"                         { printf("TLBRACE\n"); return TOKEN(TLBRACE);}
 "}"                         { printf("TRBRACE\n"); return TOKEN(TRBRACE);}
 "."                         { printf("TDOT\n"); return TOKEN(TDOT);}
-","                         { printf("TCOMMA\n"); return TOKEN(TCOMA);}
+","                         { printf("TCOMMA\n"); return TOKEN(TCOMMA);}
 "+"                         { printf("TPLUS\n"); return TOKEN(TPLUS);}
 "-"                         { printf("TMINUS\n"); return TOKEN(TMINUS);}
 "*"                         { printf("TMUL\n"); return TOKEN(TMUL);}
@@ -61,7 +62,3 @@ false                       { printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse
 (.*)*.*\*\/               { printf("MultiCommentEnd"); SAVE_TOKEN; return MultiCommentEnd;}
 .                         { printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
 %%
-
-int main() {
-    yylex();
-}

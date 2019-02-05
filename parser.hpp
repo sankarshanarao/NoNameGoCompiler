@@ -82,7 +82,10 @@
      BoolFalse = 298,
      String = 299,
      Float = 300,
-     Int = 301
+     Int = 301,
+     MultiCommentBegin = 302,
+     MultiCommentEnd = 303,
+     Identifier = 304
    };
 #endif
 /* Tokens.  */
@@ -130,12 +133,23 @@
 #define String 299
 #define Float 300
 #define Int 301
+#define MultiCommentBegin 302
+#define MultiCommentEnd 303
+#define Identifier 304
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+#line 19 "parser.y"
+{
+    std::string *string;
+    int token;
+}
+/* Line 1529 of yacc.c.  */
+#line 152 "parser.hpp"
+	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
