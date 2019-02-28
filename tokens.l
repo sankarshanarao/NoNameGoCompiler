@@ -1,8 +1,9 @@
 %{
 #include <string>
 #include <iostream>
-#define SAVE_TOKEN yyval.string= new std::string(yytext,yyleng)
-#define TOKEN(t) (yyval.token=t)
+#include "parser.hpp"
+#define SAVE_TOKEN yylval.string= new std::string(yytext,yyleng)
+#define TOKEN(t) (yylval.token=t)
 %}
 
 alpha [a-zA-Z]
@@ -10,7 +11,7 @@ digit [0-9]
 
 %%
 [ \t]                       ;   // ignoring spaces and tabs
-[\n]                        {yylineno++; printf("New Line\n"); return yytext[0];} // counting line nos for error reporting
+[\n]+                        {yylineno++; printf("NEW LINE NUMBER %d\n",yylineno); return yytext[0];} // counting line nos for error reporting
 
 
 "="                         { printf("TEQUAL\n"); return TOKEN(TEQUAL);}
@@ -33,7 +34,7 @@ digit [0-9]
 "{"                         { printf("TLBRACE\n"); return TOKEN(TLBRACE);}
 "}"                         { printf("TRBRACE\n"); return TOKEN(TRBRACE);}
 "."                         { printf("TDOT\n"); return TOKEN(TDOT);}
-","                         { printf("TCOMMA\n"); return TOKEN(TCOMA);}
+","                         { printf("TCOMMA\n"); return TOKEN(TCOMMA);}
 "+"                         { printf("TPLUS\n"); return TOKEN(TPLUS);}
 "-"                         { printf("TMINUS\n"); return TOKEN(TMINUS);}
 "*"                         { printf("TMUL\n"); return TOKEN(TMUL);}
@@ -42,10 +43,11 @@ digit [0-9]
 
 for                         { printf("TKFOR\n"); return TOKEN(TKFOR);}    // keyword for
 if                          { printf("TKIF\n"); return TOKEN(TKIF);} // keyword if
+else                        { printf("TKELSE\n"); return TOKEN(TKELSE);} // keyword else
 func                        { printf("TKFUNC\n"); return TOKEN(TKFUNC);}   // keyword func
 import                      { printf("TKIMPORT\n"); return TOKEN(TKIMPORT);}   // keyword import
 main                        { printf("TKMAIN\n"); return TOKEN(TKMAIN);} // keyword main
-
+package                     { printf("TKPACKKAGE\n"); return TOKEN(TKPACKAGE);}
 
 true                        { printf("BoolTrue\n"); SAVE_TOKEN; return BoolTrue;}   // literal bool
 false                       { printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse;}  // literal bool
@@ -60,8 +62,7 @@ false                       { printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse
 \/\*(.*)*                 { printf("MultiCommentBegin\n"); SAVE_TOKEN; return MultiCommentBegin;}
 (.*)*.*\*\/               { printf("MultiCommentEnd"); SAVE_TOKEN; return MultiCommentEnd;}
 .                         { printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
-%%
 
-int main() {
-    yylex();
-}
+
+%%
+//<<EOF>>                   { printf("EOF Encountered"); return EOF;}
