@@ -1,7 +1,10 @@
 %{
     #include <iostream>
+    #include <string>
+
     extern int yylex();
-    void yyerror(const char *s) { printf("ERROR: %sn", s); }
+    extern int insertSymbolTable(std::string);
+    void yyerror(const char *s) { printf("ERROR: %s:", s); }
 %}
 
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
@@ -68,7 +71,7 @@ Declaration:
     ;
 
 Declarationdash:
-    VariableDecla  Declarationdash
+    VariableDecla
     |
     ; 
 
@@ -76,8 +79,8 @@ VariableDecla:
     Identifier TEQUAL Literal '\n'
     ;
 
-ConditionalExp:
-    ;
+// ConditionalExp:
+//     ;
 //............................................
 
 

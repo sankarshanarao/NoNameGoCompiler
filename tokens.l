@@ -4,6 +4,8 @@
 #include "parser.hpp"
 #define SAVE_TOKEN yylval.string= new std::string(yytext,yyleng)
 #define TOKEN(t) (yylval.token=t)
+
+int emptyLine = 1;
 %}
 
 alpha [a-zA-Z]
@@ -11,7 +13,7 @@ digit [0-9]
 
 %%
 [ \t]                       ;   // ignoring spaces and tabs
-[\n]+                        {yylineno++; printf("NEW LINE NUMBER %d\n",yylineno); return yytext[0];} // counting line nos for error reporting
+[\n]+                       {yylineno++; printf("NEW LINE NUMBER %d\n",yylineno); return yytext[0];} // counting line nos for error reporting
 
 
 "="                         { printf("TEQUAL\n"); return TOKEN(TEQUAL);}
