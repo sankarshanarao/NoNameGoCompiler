@@ -1,5 +1,6 @@
 Terminals which are not used
 
+   TIDENTIFIER
    TINTEGER
    TDOUBLE
    TCEQ
@@ -8,6 +9,7 @@ Terminals which are not used
    TCLE
    TCGT
    TCGE
+   TEQUAL
    TNEG
    TBAND
    TBOR
@@ -16,84 +18,50 @@ Terminals which are not used
    TOR
    TLCHAN
    TRCHAN
+   TLPAREN
+   TRPAREN
+   TLBRACE
+   TRBRACE
    TCOMMA
    TDOT
    TPLUS
    TMINUS
    TMUL
    TDIV
+   TKFOR
+   TKIF
+   TKFUNC
+   TKIMPORT
    TKVAR
+   TKELSE
    TDINT
    TDFLOAT
    TDBOOL
    TDSTRING
+   BoolTrue
+   BoolFalse
+   String
+   Float
+   Int
    MultiCommentBegin
    MultiCommentEnd
-
-
-State 16 conflicts: 1 shift/reduce
-State 38 conflicts: 4 shift/reduce
-State 53 conflicts: 1 shift/reduce
 
 
 Grammar
 
     0 $accept: program $end
 
-    1 program: PackageDefinition Imports Declaration MainFunc Declaration
+    1 program: PackageDefinition
 
-    2 PackageDefinition: TKPACKAGE TKMAIN
-    3                  | TKPACKAGE TIDENTIFIER
-    4                  | PackageDefinition '\n'
-
-    5 Imports: SingleImports
-
-    6 SingleImports: SingleImportsDash
-
-    7 SingleImportsDash: TKIMPORT String '\n' SingleImportsDash
-    8                  | /* empty */
-
-    9 Declaration: Declarationdash
-
-   10 Declarationdash: VariableDecla Declarationdash
-   11                | /* empty */
-
-   12 VariableDecla: Identifier TEQUAL Literal '\n'
-
-   13 Literal: BoolTrue
-   14        | BoolFalse
-   15        | String
-   16        | Float
-   17        | Int
-
-   18 MainFunc: TKFUNC TKMAIN TLPAREN TRPAREN CompoundBloc
-
-   19 CompoundBloc: TLBRACE '\n' StatementList TRBRACE CompoundBloc
-   20             | '\n'
-   21             | /* empty */
-
-   22 StatementList: StatementList Statement
-   23              | /* empty */
-
-   24 Statement: Declaration
-   25          | For
-   26          | If
-
-   27 For: TKFOR TLPAREN TRPAREN CompoundBloc
-
-   28 If: TKIF TLPAREN TRPAREN CompoundBloc Else
-
-   29 Else: TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
-   30     | TKELSE CompoundBloc
-   31     | /* empty */
+    2 PackageDefinition: TKPACKAGE TKMAIN TTERM
+    3                  | TKPACKAGE Identifier TTERM
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'\n' (10) 4 7 12 19 20
 error (256)
-TIDENTIFIER (258) 3
+TIDENTIFIER (258)
 TINTEGER (259)
 TDOUBLE (260)
 TCEQ (261)
@@ -102,7 +70,7 @@ TCLT (263)
 TCLE (264)
 TCGT (265)
 TCGE (266)
-TEQUAL (267) 12
+TEQUAL (267)
 TNEG (268)
 TBAND (269)
 TBOR (270)
@@ -111,36 +79,37 @@ TAND (272)
 TOR (273)
 TLCHAN (274)
 TRCHAN (275)
-TLPAREN (276) 18 27 28 29
-TRPAREN (277) 18 27 28 29
-TLBRACE (278) 19
-TRBRACE (279) 19
+TLPAREN (276)
+TRPAREN (277)
+TLBRACE (278)
+TRBRACE (279)
 TCOMMA (280)
 TDOT (281)
 TPLUS (282)
 TMINUS (283)
 TMUL (284)
 TDIV (285)
-TKFOR (286) 27
-TKIF (287) 28 29
-TKFUNC (288) 18
-TKIMPORT (289) 7
-TKMAIN (290) 2 18
+TKFOR (286)
+TKIF (287)
+TKFUNC (288)
+TKIMPORT (289)
+TKMAIN (290) 2
 TKPACKAGE (291) 2 3
 TKVAR (292)
-TKELSE (293) 29 30
+TKELSE (293)
 TDINT (294)
 TDFLOAT (295)
 TDBOOL (296)
 TDSTRING (297)
-BoolTrue (298) 13
-BoolFalse (299) 14
-String (300) 7 15
-Float (301) 16
-Int (302) 17
+BoolTrue (298)
+BoolFalse (299)
+String (300)
+Float (301)
+Int (302)
 MultiCommentBegin (303)
 MultiCommentEnd (304)
-Identifier (305) 12
+Identifier (305) 3
+TTERM (306) 2 3
 
 
 Nonterminals, with rules where they appear
@@ -150,44 +119,15 @@ $accept (52)
 program (53)
     on left: 1, on right: 0
 PackageDefinition (54)
-    on left: 2 3 4, on right: 1 4
-Imports (55)
-    on left: 5, on right: 1
-SingleImports (56)
-    on left: 6, on right: 5
-SingleImportsDash (57)
-    on left: 7 8, on right: 6 7
-Declaration (58)
-    on left: 9, on right: 1 24
-Declarationdash (59)
-    on left: 10 11, on right: 9 10
-VariableDecla (60)
-    on left: 12, on right: 10
-Literal (61)
-    on left: 13 14 15 16 17, on right: 12
-MainFunc (62)
-    on left: 18, on right: 1
-CompoundBloc (63)
-    on left: 19 20 21, on right: 18 19 27 28 29 30
-StatementList (64)
-    on left: 22 23, on right: 19 22
-Statement (65)
-    on left: 24 25 26, on right: 22
-For (66)
-    on left: 27, on right: 25
-If (67)
-    on left: 28, on right: 26
-Else (68)
-    on left: 29 30 31, on right: 28 29
+    on left: 2 3, on right: 1
 
 
 state 0
 
     0 $accept: . program $end
-    1 program: . PackageDefinition Imports Declaration MainFunc Declaration
-    2 PackageDefinition: . TKPACKAGE TKMAIN
-    3                  | . TKPACKAGE TIDENTIFIER
-    4                  | . PackageDefinition '\n'
+    1 program: . PackageDefinition
+    2 PackageDefinition: . TKPACKAGE TKMAIN TTERM
+    3                  | . TKPACKAGE Identifier TTERM
 
     TKPACKAGE  shift, and go to state 1
 
@@ -197,11 +137,11 @@ state 0
 
 state 1
 
-    2 PackageDefinition: TKPACKAGE . TKMAIN
-    3                  | TKPACKAGE . TIDENTIFIER
+    2 PackageDefinition: TKPACKAGE . TKMAIN TTERM
+    3                  | TKPACKAGE . Identifier TTERM
 
-    TIDENTIFIER  shift, and go to state 4
-    TKMAIN       shift, and go to state 5
+    TKMAIN      shift, and go to state 4
+    Identifier  shift, and go to state 5
 
 
 state 2
@@ -213,35 +153,23 @@ state 2
 
 state 3
 
-    1 program: PackageDefinition . Imports Declaration MainFunc Declaration
-    4 PackageDefinition: PackageDefinition . '\n'
-    5 Imports: . SingleImports
-    6 SingleImports: . SingleImportsDash
-    7 SingleImportsDash: . TKIMPORT String '\n' SingleImportsDash
-    8                  | .  [TKFUNC, Identifier]
+    1 program: PackageDefinition .
 
-    TKIMPORT  shift, and go to state 7
-    '\n'      shift, and go to state 8
-
-    $default  reduce using rule 8 (SingleImportsDash)
-
-    Imports            go to state 9
-    SingleImports      go to state 10
-    SingleImportsDash  go to state 11
+    $default  reduce using rule 1 (program)
 
 
 state 4
 
-    3 PackageDefinition: TKPACKAGE TIDENTIFIER .
+    2 PackageDefinition: TKPACKAGE TKMAIN . TTERM
 
-    $default  reduce using rule 3 (PackageDefinition)
+    TTERM  shift, and go to state 7
 
 
 state 5
 
-    2 PackageDefinition: TKPACKAGE TKMAIN .
+    3 PackageDefinition: TKPACKAGE Identifier . TTERM
 
-    $default  reduce using rule 2 (PackageDefinition)
+    TTERM  shift, and go to state 8
 
 
 state 6
@@ -253,520 +181,13 @@ state 6
 
 state 7
 
-    7 SingleImportsDash: TKIMPORT . String '\n' SingleImportsDash
+    2 PackageDefinition: TKPACKAGE TKMAIN TTERM .
 
-    String  shift, and go to state 12
+    $default  reduce using rule 2 (PackageDefinition)
 
 
 state 8
 
-    4 PackageDefinition: PackageDefinition '\n' .
+    3 PackageDefinition: TKPACKAGE Identifier TTERM .
 
-    $default  reduce using rule 4 (PackageDefinition)
-
-
-state 9
-
-    1 program: PackageDefinition Imports . Declaration MainFunc Declaration
-    9 Declaration: . Declarationdash
-   10 Declarationdash: . VariableDecla Declarationdash
-   11                | .  [TKFUNC]
-   12 VariableDecla: . Identifier TEQUAL Literal '\n'
-
-    Identifier  shift, and go to state 13
-
-    $default  reduce using rule 11 (Declarationdash)
-
-    Declaration      go to state 14
-    Declarationdash  go to state 15
-    VariableDecla    go to state 16
-
-
-state 10
-
-    5 Imports: SingleImports .
-
-    $default  reduce using rule 5 (Imports)
-
-
-state 11
-
-    6 SingleImports: SingleImportsDash .
-
-    $default  reduce using rule 6 (SingleImports)
-
-
-state 12
-
-    7 SingleImportsDash: TKIMPORT String . '\n' SingleImportsDash
-
-    '\n'  shift, and go to state 17
-
-
-state 13
-
-   12 VariableDecla: Identifier . TEQUAL Literal '\n'
-
-    TEQUAL  shift, and go to state 18
-
-
-state 14
-
-    1 program: PackageDefinition Imports Declaration . MainFunc Declaration
-   18 MainFunc: . TKFUNC TKMAIN TLPAREN TRPAREN CompoundBloc
-
-    TKFUNC  shift, and go to state 19
-
-    MainFunc  go to state 20
-
-
-state 15
-
-    9 Declaration: Declarationdash .
-
-    $default  reduce using rule 9 (Declaration)
-
-
-state 16
-
-   10 Declarationdash: . VariableDecla Declarationdash
-   10                | VariableDecla . Declarationdash
-   11                | .  [$end, TRBRACE, TKFOR, TKIF, TKFUNC, Identifier]
-   12 VariableDecla: . Identifier TEQUAL Literal '\n'
-
-    Identifier  shift, and go to state 13
-
-    Identifier  [reduce using rule 11 (Declarationdash)]
-    $default    reduce using rule 11 (Declarationdash)
-
-    Declarationdash  go to state 21
-    VariableDecla    go to state 16
-
-
-state 17
-
-    7 SingleImportsDash: . TKIMPORT String '\n' SingleImportsDash
-    7                  | TKIMPORT String '\n' . SingleImportsDash
-    8                  | .  [TKFUNC, Identifier]
-
-    TKIMPORT  shift, and go to state 7
-
-    $default  reduce using rule 8 (SingleImportsDash)
-
-    SingleImportsDash  go to state 22
-
-
-state 18
-
-   12 VariableDecla: Identifier TEQUAL . Literal '\n'
-   13 Literal: . BoolTrue
-   14        | . BoolFalse
-   15        | . String
-   16        | . Float
-   17        | . Int
-
-    BoolTrue   shift, and go to state 23
-    BoolFalse  shift, and go to state 24
-    String     shift, and go to state 25
-    Float      shift, and go to state 26
-    Int        shift, and go to state 27
-
-    Literal  go to state 28
-
-
-state 19
-
-   18 MainFunc: TKFUNC . TKMAIN TLPAREN TRPAREN CompoundBloc
-
-    TKMAIN  shift, and go to state 29
-
-
-state 20
-
-    1 program: PackageDefinition Imports Declaration MainFunc . Declaration
-    9 Declaration: . Declarationdash
-   10 Declarationdash: . VariableDecla Declarationdash
-   11                | .  [$end]
-   12 VariableDecla: . Identifier TEQUAL Literal '\n'
-
-    Identifier  shift, and go to state 13
-
-    $default  reduce using rule 11 (Declarationdash)
-
-    Declaration      go to state 30
-    Declarationdash  go to state 15
-    VariableDecla    go to state 16
-
-
-state 21
-
-   10 Declarationdash: VariableDecla Declarationdash .
-
-    $default  reduce using rule 10 (Declarationdash)
-
-
-state 22
-
-    7 SingleImportsDash: TKIMPORT String '\n' SingleImportsDash .
-
-    $default  reduce using rule 7 (SingleImportsDash)
-
-
-state 23
-
-   13 Literal: BoolTrue .
-
-    $default  reduce using rule 13 (Literal)
-
-
-state 24
-
-   14 Literal: BoolFalse .
-
-    $default  reduce using rule 14 (Literal)
-
-
-state 25
-
-   15 Literal: String .
-
-    $default  reduce using rule 15 (Literal)
-
-
-state 26
-
-   16 Literal: Float .
-
-    $default  reduce using rule 16 (Literal)
-
-
-state 27
-
-   17 Literal: Int .
-
-    $default  reduce using rule 17 (Literal)
-
-
-state 28
-
-   12 VariableDecla: Identifier TEQUAL Literal . '\n'
-
-    '\n'  shift, and go to state 31
-
-
-state 29
-
-   18 MainFunc: TKFUNC TKMAIN . TLPAREN TRPAREN CompoundBloc
-
-    TLPAREN  shift, and go to state 32
-
-
-state 30
-
-    1 program: PackageDefinition Imports Declaration MainFunc Declaration .
-
-    $default  reduce using rule 1 (program)
-
-
-state 31
-
-   12 VariableDecla: Identifier TEQUAL Literal '\n' .
-
-    $default  reduce using rule 12 (VariableDecla)
-
-
-state 32
-
-   18 MainFunc: TKFUNC TKMAIN TLPAREN . TRPAREN CompoundBloc
-
-    TRPAREN  shift, and go to state 33
-
-
-state 33
-
-   18 MainFunc: TKFUNC TKMAIN TLPAREN TRPAREN . CompoundBloc
-   19 CompoundBloc: . TLBRACE '\n' StatementList TRBRACE CompoundBloc
-   20             | . '\n'
-   21             | .  [$end, Identifier]
-
-    TLBRACE  shift, and go to state 34
-    '\n'     shift, and go to state 35
-
-    $default  reduce using rule 21 (CompoundBloc)
-
-    CompoundBloc  go to state 36
-
-
-state 34
-
-   19 CompoundBloc: TLBRACE . '\n' StatementList TRBRACE CompoundBloc
-
-    '\n'  shift, and go to state 37
-
-
-state 35
-
-   20 CompoundBloc: '\n' .
-
-    $default  reduce using rule 20 (CompoundBloc)
-
-
-state 36
-
-   18 MainFunc: TKFUNC TKMAIN TLPAREN TRPAREN CompoundBloc .
-
-    $default  reduce using rule 18 (MainFunc)
-
-
-state 37
-
-   19 CompoundBloc: TLBRACE '\n' . StatementList TRBRACE CompoundBloc
-   22 StatementList: . StatementList Statement
-   23              | .
-
-    $default  reduce using rule 23 (StatementList)
-
-    StatementList  go to state 38
-
-
-state 38
-
-    9 Declaration: . Declarationdash
-   10 Declarationdash: . VariableDecla Declarationdash
-   11                | .  [TRBRACE, TKFOR, TKIF, Identifier]
-   12 VariableDecla: . Identifier TEQUAL Literal '\n'
-   19 CompoundBloc: TLBRACE '\n' StatementList . TRBRACE CompoundBloc
-   22 StatementList: StatementList . Statement
-   24 Statement: . Declaration
-   25          | . For
-   26          | . If
-   27 For: . TKFOR TLPAREN TRPAREN CompoundBloc
-   28 If: . TKIF TLPAREN TRPAREN CompoundBloc Else
-
-    TRBRACE     shift, and go to state 39
-    TKFOR       shift, and go to state 40
-    TKIF        shift, and go to state 41
-    Identifier  shift, and go to state 13
-
-    TRBRACE     [reduce using rule 11 (Declarationdash)]
-    TKFOR       [reduce using rule 11 (Declarationdash)]
-    TKIF        [reduce using rule 11 (Declarationdash)]
-    Identifier  [reduce using rule 11 (Declarationdash)]
-
-    Declaration      go to state 42
-    Declarationdash  go to state 15
-    VariableDecla    go to state 16
-    Statement        go to state 43
-    For              go to state 44
-    If               go to state 45
-
-
-state 39
-
-   19 CompoundBloc: . TLBRACE '\n' StatementList TRBRACE CompoundBloc
-   19             | TLBRACE '\n' StatementList TRBRACE . CompoundBloc
-   20             | . '\n'
-   21             | .  [$end, TRBRACE, TKFOR, TKIF, TKELSE, Identifier]
-
-    TLBRACE  shift, and go to state 34
-    '\n'     shift, and go to state 35
-
-    $default  reduce using rule 21 (CompoundBloc)
-
-    CompoundBloc  go to state 46
-
-
-state 40
-
-   27 For: TKFOR . TLPAREN TRPAREN CompoundBloc
-
-    TLPAREN  shift, and go to state 47
-
-
-state 41
-
-   28 If: TKIF . TLPAREN TRPAREN CompoundBloc Else
-
-    TLPAREN  shift, and go to state 48
-
-
-state 42
-
-   24 Statement: Declaration .
-
-    $default  reduce using rule 24 (Statement)
-
-
-state 43
-
-   22 StatementList: StatementList Statement .
-
-    $default  reduce using rule 22 (StatementList)
-
-
-state 44
-
-   25 Statement: For .
-
-    $default  reduce using rule 25 (Statement)
-
-
-state 45
-
-   26 Statement: If .
-
-    $default  reduce using rule 26 (Statement)
-
-
-state 46
-
-   19 CompoundBloc: TLBRACE '\n' StatementList TRBRACE CompoundBloc .
-
-    $default  reduce using rule 19 (CompoundBloc)
-
-
-state 47
-
-   27 For: TKFOR TLPAREN . TRPAREN CompoundBloc
-
-    TRPAREN  shift, and go to state 49
-
-
-state 48
-
-   28 If: TKIF TLPAREN . TRPAREN CompoundBloc Else
-
-    TRPAREN  shift, and go to state 50
-
-
-state 49
-
-   19 CompoundBloc: . TLBRACE '\n' StatementList TRBRACE CompoundBloc
-   20             | . '\n'
-   21             | .  [TRBRACE, TKFOR, TKIF, Identifier]
-   27 For: TKFOR TLPAREN TRPAREN . CompoundBloc
-
-    TLBRACE  shift, and go to state 34
-    '\n'     shift, and go to state 35
-
-    $default  reduce using rule 21 (CompoundBloc)
-
-    CompoundBloc  go to state 51
-
-
-state 50
-
-   19 CompoundBloc: . TLBRACE '\n' StatementList TRBRACE CompoundBloc
-   20             | . '\n'
-   21             | .  [TRBRACE, TKFOR, TKIF, TKELSE, Identifier]
-   28 If: TKIF TLPAREN TRPAREN . CompoundBloc Else
-
-    TLBRACE  shift, and go to state 34
-    '\n'     shift, and go to state 35
-
-    $default  reduce using rule 21 (CompoundBloc)
-
-    CompoundBloc  go to state 52
-
-
-state 51
-
-   27 For: TKFOR TLPAREN TRPAREN CompoundBloc .
-
-    $default  reduce using rule 27 (For)
-
-
-state 52
-
-   28 If: TKIF TLPAREN TRPAREN CompoundBloc . Else
-   29 Else: . TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
-   30     | . TKELSE CompoundBloc
-   31     | .  [TRBRACE, TKFOR, TKIF, Identifier]
-
-    TKELSE  shift, and go to state 53
-
-    $default  reduce using rule 31 (Else)
-
-    Else  go to state 54
-
-
-state 53
-
-   19 CompoundBloc: . TLBRACE '\n' StatementList TRBRACE CompoundBloc
-   20             | . '\n'
-   21             | .  [TRBRACE, TKFOR, TKIF, Identifier]
-   29 Else: TKELSE . TKIF TLPAREN TRPAREN CompoundBloc Else
-   30     | TKELSE . CompoundBloc
-
-    TLBRACE  shift, and go to state 34
-    TKIF     shift, and go to state 55
-    '\n'     shift, and go to state 35
-
-    TKIF      [reduce using rule 21 (CompoundBloc)]
-    $default  reduce using rule 21 (CompoundBloc)
-
-    CompoundBloc  go to state 56
-
-
-state 54
-
-   28 If: TKIF TLPAREN TRPAREN CompoundBloc Else .
-
-    $default  reduce using rule 28 (If)
-
-
-state 55
-
-   29 Else: TKELSE TKIF . TLPAREN TRPAREN CompoundBloc Else
-
-    TLPAREN  shift, and go to state 57
-
-
-state 56
-
-   30 Else: TKELSE CompoundBloc .
-
-    $default  reduce using rule 30 (Else)
-
-
-state 57
-
-   29 Else: TKELSE TKIF TLPAREN . TRPAREN CompoundBloc Else
-
-    TRPAREN  shift, and go to state 58
-
-
-state 58
-
-   19 CompoundBloc: . TLBRACE '\n' StatementList TRBRACE CompoundBloc
-   20             | . '\n'
-   21             | .  [TRBRACE, TKFOR, TKIF, TKELSE, Identifier]
-   29 Else: TKELSE TKIF TLPAREN TRPAREN . CompoundBloc Else
-
-    TLBRACE  shift, and go to state 34
-    '\n'     shift, and go to state 35
-
-    $default  reduce using rule 21 (CompoundBloc)
-
-    CompoundBloc  go to state 59
-
-
-state 59
-
-   29 Else: . TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
-   29     | TKELSE TKIF TLPAREN TRPAREN CompoundBloc . Else
-   30     | . TKELSE CompoundBloc
-   31     | .  [TRBRACE, TKFOR, TKIF, Identifier]
-
-    TKELSE  shift, and go to state 53
-
-    $default  reduce using rule 31 (Else)
-
-    Else  go to state 60
-
-
-state 60
-
-   29 Else: TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else .
-
-    $default  reduce using rule 29 (Else)
+    $default  reduce using rule 3 (PackageDefinition)

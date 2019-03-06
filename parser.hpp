@@ -86,7 +86,8 @@
      Int = 302,
      MultiCommentBegin = 303,
      MultiCommentEnd = 304,
-     Identifier = 305
+     Identifier = 305,
+     TTERM = 306
    };
 #endif
 /* Tokens.  */
@@ -138,19 +139,20 @@
 #define MultiCommentBegin 303
 #define MultiCommentEnd 304
 #define Identifier 305
+#define TTERM 306
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 18 "parser.y"
+#line 19 "parser.y"
 {
     std::string *string;
     int token;
 }
 /* Line 1529 of yacc.c.  */
-#line 154 "parser.hpp"
+#line 156 "parser.hpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

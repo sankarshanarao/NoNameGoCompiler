@@ -13,58 +13,67 @@ digit [0-9]
 
 %%
 [ \t]                       ;   // ignoring spaces and tabs
-[\n]+                       {yylineno++; printf("NEW LINE NUMBER %d\n",yylineno); return yytext[0];} // counting line nos for error reporting
+[\n]                        {
+    if(emptyLine) {
+        // std::cout<<"emptyLine";
+        emptyLine=1;
+    } else {
+        // std::cout<<"newLine";
+        emptyLine=1;
+        return TTERM;
+    }
+} // counting line nos for error reporting
+
+"="                         { emptyLine=0; printf("TEQUAL\n"); return TOKEN(TEQUAL);}
+"=="                        { emptyLine=0; printf("TCEQ\n"); return TOKEN(TCEQ);}
+"!="                        { emptyLine=0; printf("TCNE\n"); return TOKEN(TCNE);}
+"!"                         { emptyLine=0; printf("TNEG\n"); return TOKEN(TNEG);}
+"&"                         { emptyLine=0; printf("TBAND\n"); return TOKEN(TBAND);}
+"|"                         { emptyLine=0; printf("TBOR\n"); return TOKEN(TBOR);}
+"^"                         { emptyLine=0; printf("TBXOR\n"); return TOKEN(TBXOR);}
+"&&"                        { emptyLine=0; printf("TAND\n"); return TOKEN(TAND);}
+"||"                        { emptyLine=0; printf("TOR\n"); return TOKEN(TOR);}
+"<-"                        { emptyLine=0; printf("TLCHAN\n"); return TOKEN(TLCHAN);}
+"->"                        { emptyLine=0; printf("TRCHAN\n"); return TOKEN(TRCHAN);}
+"<"                         { emptyLine=0; printf("TCLT\n"); return TOKEN(TCLT);}
+"<="                        { emptyLine=0; printf("TCLE\n"); return TOKEN(TCLE);}
+">"                         { emptyLine=0; printf("TCGT\n"); return TOKEN(TCGT);}
+">="                        { emptyLine=0; printf("TCGE\n"); return TOKEN(TCGE);}
+"("                         { emptyLine=0; printf("TLPAREN\n"); return TOKEN(TLPAREN);}
+")"                         { emptyLine=0; printf("TRPAREN\n"); return TOKEN(TRPAREN);}
+"{"                         { emptyLine=0; printf("TLBRACE\n"); return TOKEN(TLBRACE);}
+"}"                         { emptyLine=0; printf("TRBRACE\n"); return TOKEN(TRBRACE);}
+"."                         { emptyLine=0; printf("TDOT\n"); return TOKEN(TDOT);}
+","                         { emptyLine=0; printf("TCOMMA\n"); return TOKEN(TCOMMA);}
+"+"                         { emptyLine=0; printf("TPLUS\n"); return TOKEN(TPLUS);}
+"-"                         { emptyLine=0; printf("TMINUS\n"); return TOKEN(TMINUS);}
+"*"                         { emptyLine=0; printf("TMUL\n"); return TOKEN(TMUL);}
+"/"                         { emptyLine=0; printf("TDIV\n"); return TOKEN(TDIV);}
 
 
-"="                         { printf("TEQUAL\n"); return TOKEN(TEQUAL);}
-"=="                        { printf("TCEQ\n"); return TOKEN(TCEQ);}
-"!="                        { printf("TCNE\n"); return TOKEN(TCNE);}
-"!"                         { printf("TNEG\n"); return TOKEN(TNEG);}
-"&"                         { printf("TBAND\n"); return TOKEN(TBAND);}
-"|"                         { printf("TBOR\n"); return TOKEN(TBOR);}
-"^"                         { printf("TBXOR\n"); return TOKEN(TBXOR);}
-"&&"                        { printf("TAND\n"); return TOKEN(TAND);}
-"||"                        { printf("TOR\n"); return TOKEN(TOR);}
-"<-"                        { printf("TLCHAN\n"); return TOKEN(TLCHAN);}
-"->"                        { printf("TRCHAN\n"); return TOKEN(TRCHAN);}
-"<"                         { printf("TCLT\n"); return TOKEN(TCLT);}
-"<="                        { printf("TCLE\n"); return TOKEN(TCLE);}
-">"                         { printf("TCGT\n"); return TOKEN(TCGT);}
-">="                        { printf("TCGE\n"); return TOKEN(TCGE);}
-"("                         { printf("TLPAREN\n"); return TOKEN(TLPAREN);}
-")"                         { printf("TRPAREN\n"); return TOKEN(TRPAREN);}
-"{"                         { printf("TLBRACE\n"); return TOKEN(TLBRACE);}
-"}"                         { printf("TRBRACE\n"); return TOKEN(TRBRACE);}
-"."                         { printf("TDOT\n"); return TOKEN(TDOT);}
-","                         { printf("TCOMMA\n"); return TOKEN(TCOMMA);}
-"+"                         { printf("TPLUS\n"); return TOKEN(TPLUS);}
-"-"                         { printf("TMINUS\n"); return TOKEN(TMINUS);}
-"*"                         { printf("TMUL\n"); return TOKEN(TMUL);}
-"/"                         { printf("TDIV\n"); return TOKEN(TDIV);}
+for                         { emptyLine=0; printf("TKFOR\n"); return TOKEN(TKFOR);}    // keyword for
+if                          { emptyLine=0; printf("TKIF\n"); return TOKEN(TKIF);} // keyword if
+else                        { emptyLine=0; printf("TKELSE\n"); return TOKEN(TKELSE);} // keyword else
+func                        { emptyLine=0; printf("TKFUNC\n"); return TOKEN(TKFUNC);}   // keyword func
+import                      { emptyLine=0; printf("TKIMPORT\n"); return TOKEN(TKIMPORT);}   // keyword import
+main                        { emptyLine=0; printf("TKMAIN\n"); return TOKEN(TKMAIN);} // keyword main
+package                     { emptyLine=0; printf("TKPACKKAGE\n"); return TOKEN(TKPACKAGE);}
+
+true                        { emptyLine=0; printf("BoolTrue\n"); SAVE_TOKEN; return BoolTrue;}   // literal bool
+false                       { emptyLine=0; printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse;}  // literal bool
+[\"].*[\"]                  { emptyLine=0; printf("String\n"); SAVE_TOKEN; return String;}  // literal string
+{digit}+.{digit}+           { emptyLine=0; printf("Float\n"); SAVE_TOKEN; return Float;}  // literal float
+{digit}+.?                  { emptyLine=0; printf("Int\n"); SAVE_TOKEN; return Int;}    // literal int
 
 
-for                         { printf("TKFOR\n"); return TOKEN(TKFOR);}    // keyword for
-if                          { printf("TKIF\n"); return TOKEN(TKIF);} // keyword if
-else                        { printf("TKELSE\n"); return TOKEN(TKELSE);} // keyword else
-func                        { printf("TKFUNC\n"); return TOKEN(TKFUNC);}   // keyword func
-import                      { printf("TKIMPORT\n"); return TOKEN(TKIMPORT);}   // keyword import
-main                        { printf("TKMAIN\n"); return TOKEN(TKMAIN);} // keyword main
-package                     { printf("TKPACKKAGE\n"); return TOKEN(TKPACKAGE);}
-
-true                        { printf("BoolTrue\n"); SAVE_TOKEN; return BoolTrue;}   // literal bool
-false                       { printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse;}  // literal bool
-[\"].*[\"]                  { printf("String\n"); SAVE_TOKEN; return String;}  // literal string
-{digit}+.{digit}+           { printf("Float\n"); SAVE_TOKEN; return Float;}  // literal float
-{digit}+.?                  { printf("Int\n"); SAVE_TOKEN; return Int;}    // literal int
-
-
-{alpha}({alpha}|{digit}|_)* { printf("Identifier: %s\n", yytext); SAVE_TOKEN; return Identifier;} // identifier
+{alpha}({alpha}|{digit}|_)* { emptyLine=0; printf("Identifier: %s\n", yytext); SAVE_TOKEN; return Identifier;} // identifier
 
 \/\/.* ;
-\/\*(.*)*                 { printf("MultiCommentBegin\n"); SAVE_TOKEN; return MultiCommentBegin;}
-(.*)*.*\*\/               { printf("MultiCommentEnd"); SAVE_TOKEN; return MultiCommentEnd;}
-.                         { printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
+\/\*(.*)*                 { emptyLine=0; printf("MultiCommentBegin\n"); SAVE_TOKEN; return MultiCommentBegin;}
+(.*)*.*\*\/               { emptyLine=0; printf("MultiCommentEnd"); SAVE_TOKEN; return MultiCommentEnd;}
+.                         { emptyLine=0; printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
 
 
+
+<<EOF>>                   { emptyLine=0; printf("EOF Encountered\n"); return EOF;}
 %%
-//<<EOF>>                   { printf("EOF Encountered"); return EOF;}

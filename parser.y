@@ -14,6 +14,7 @@
 %token <token> TKFOR TKIF TKFUNC TKIMPORT TKMAIN TKPACKAGE TKVAR TKELSE
 %token <token> TDINT TDFLOAT TDBOOL TDSTRING
 %token <token> BoolTrue BoolFalse String Float Int MultiCommentBegin MultiCommentEnd Identifier
+%token <token> TTERM
 
 %union {
     std::string *string;
@@ -27,125 +28,36 @@
 
 %%
 
+// program:
+//     PackageDefinition
+//     Imports
+//     | {
+//         std::cout<<"Empty File"<<std::endl;
+//     }
+//     ;
 
-
-//Starting part of parsing...........
 program:
     PackageDefinition
-    Imports
-    Declaration
-    MainFunc
-    Declaration
-    ;
-//....................................
-
-
-
-//Initial package identifier..........
-PackageDefinition: TKPACKAGE TKMAIN
-    | TKPACKAGE TIDENTIFIER
-    | PackageDefinition '\n'
-    ;
-//.....................................
-
-
-
-//Imports part.........................
-Imports:
-    SingleImports
-    ;
-SingleImports:
-    SingleImportsDash
-    ;
-SingleImportsDash:
-    TKIMPORT String '\n' SingleImportsDash
-    |
-    ;
-//......................................
-
-
-
-//Entire part for declarations
-Declaration:
-    Declarationdash
+    // Imports
     ;
 
-Declarationdash:
-    VariableDecla
-    |
-    ; 
-
-VariableDecla:
-    Identifier TEQUAL Literal '\n'
+// Package
+PackageDefinition:
+    TKPACKAGE TKMAIN TTERM
+    | TKPACKAGE Identifier TTERM
     ;
 
-// ConditionalExp:
+// Imports:
+//     SingleImports
+//     // | MultiImports
 //     ;
-//............................................
 
+// SingleImports:
+//     SingleImports TKIMPORT String TTERM
+//     ;
 
-
-//Miscellaneous..............................
-Literal:
-    BoolTrue
-    | BoolFalse
-    | String
-    | Float
-    | Int
-    ;
-//...........................................
-
-
-
-//Main and it's immediate inside...............
-MainFunc:
-    TKFUNC TKMAIN TLPAREN TRPAREN CompoundBloc
-    ;
-
-CompoundBloc:
-    TLBRACE  '\n'  
-        StatementList
-    TRBRACE CompoundBloc
-    | '\n'
-    |
-    ;
-
-StatementList:
-    StatementList Statement
-    |
-    ;
-
-Statement:
-    Declaration
-    | For
-    | If
-    ;
-//...............................................
-
-
-
-//for implementation.............................
-For:
-    TKFOR TLPAREN  TRPAREN CompoundBloc
-    ;
-//...............................................
-
-
-
-//if else implementation.........................
-If:
-    TKIF TLPAREN TRPAREN CompoundBloc
-    Else
-    ;
-
-//To eliminate left recursion
-Else:
-    TKELSE TKIF TLPAREN TRPAREN CompoundBloc
-    Else
-    | TKELSE CompoundBloc
-    |
-    ;
-//...............................................
-
+// MultiImports:
+//     TKIMPORT TLPAREN TTERM
+//     ;
 
 %%
