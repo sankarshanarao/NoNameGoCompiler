@@ -2,8 +2,12 @@ package main
 
 import "fmt"
 
-a = 5
-b = 5
+var a = 5
+var c = 5
+b := 8
 
 func main() {
+var a = 5
+var c = 5
+b := 8
 }

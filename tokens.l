@@ -25,6 +25,7 @@ digit [0-9]
 } // counting line nos for error reporting
 
 "="                         { emptyLine=0; printf("TEQUAL\n"); return TOKEN(TEQUAL);}
+":="                        { emptyLine=0; printf("TSEQUAL\n"); return TOKEN(TSEQUAL);}
 "=="                        { emptyLine=0; printf("TCEQ\n"); return TOKEN(TCEQ);}
 "!="                        { emptyLine=0; printf("TCNE\n"); return TOKEN(TCNE);}
 "!"                         { emptyLine=0; printf("TNEG\n"); return TOKEN(TNEG);}
@@ -57,7 +58,9 @@ else                        { emptyLine=0; printf("TKELSE\n"); return TOKEN(TKEL
 func                        { emptyLine=0; printf("TKFUNC\n"); return TOKEN(TKFUNC);}   // keyword func
 import                      { emptyLine=0; printf("TKIMPORT\n"); return TOKEN(TKIMPORT);}   // keyword import
 main                        { emptyLine=0; printf("TKMAIN\n"); return TOKEN(TKMAIN);} // keyword main
-package                     { emptyLine=0; printf("TKPACKKAGE\n"); return TOKEN(TKPACKAGE);}
+package                     { emptyLine=0; printf("TKPACKKAGE\n"); return TOKEN(TKPACKAGE);} // keyword package
+var                         { emptyLine=0; printf("TKVAR\n"); return TOKEN(TKVAR);} // keyword var
+
 
 true                        { emptyLine=0; printf("BoolTrue\n"); SAVE_TOKEN; return BoolTrue;}   // literal bool
 false                       { emptyLine=0; printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse;}  // literal bool
@@ -66,13 +69,13 @@ false                       { emptyLine=0; printf("BoolFalse\n"); SAVE_TOKEN;ret
 {digit}+.?                  { emptyLine=0; printf("Int\n"); SAVE_TOKEN; return Int;}    // literal int
 
 
+
 {alpha}({alpha}|{digit}|_)* { emptyLine=0; printf("Identifier: %s\n", yytext); SAVE_TOKEN; return Identifier;} // identifier
 
 \/\/.* ;
 \/\*(.*)*                 { emptyLine=0; printf("MultiCommentBegin\n"); SAVE_TOKEN; return MultiCommentBegin;}
 (.*)*.*\*\/               { emptyLine=0; printf("MultiCommentEnd"); SAVE_TOKEN; return MultiCommentEnd;}
 .                         { emptyLine=0; printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
-
 
 
 <<EOF>>                   { emptyLine=0; printf("EOF Encountered\n"); return EOF;}
