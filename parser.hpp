@@ -70,31 +70,32 @@ extern int yydebug;
     TRBRACE = 280,
     TCOMMA = 281,
     TDOT = 282,
-    TPLUS = 283,
-    TMINUS = 284,
-    TMUL = 285,
-    TDIV = 286,
-    TKFOR = 287,
-    TKIF = 288,
-    TKFUNC = 289,
-    TKIMPORT = 290,
-    TKMAIN = 291,
-    TKPACKAGE = 292,
-    TKVAR = 293,
-    TKELSE = 294,
-    TDINT = 295,
-    TDFLOAT = 296,
-    TDBOOL = 297,
-    TDSTRING = 298,
-    BoolTrue = 299,
-    BoolFalse = 300,
-    String = 301,
-    Float = 302,
-    Int = 303,
-    MultiCommentBegin = 304,
-    MultiCommentEnd = 305,
-    Identifier = 306,
-    TTERM = 307
+    TSEMI = 283,
+    TPLUS = 284,
+    TMINUS = 285,
+    TMUL = 286,
+    TDIV = 287,
+    TKFOR = 288,
+    TKIF = 289,
+    TKFUNC = 290,
+    TKIMPORT = 291,
+    TKMAIN = 292,
+    TKPACKAGE = 293,
+    TKVAR = 294,
+    TKELSE = 295,
+    TDINT = 296,
+    TDFLOAT = 297,
+    TDBOOL = 298,
+    TDSTRING = 299,
+    BoolTrue = 300,
+    BoolFalse = 301,
+    String = 302,
+    Float = 303,
+    Int = 304,
+    MultiCommentBegin = 305,
+    MultiCommentEnd = 306,
+    Identifier = 307,
+    TTERM = 308
   };
 #endif
 
@@ -108,7 +109,7 @@ union YYSTYPE
     std::string *string;
     int token;
 
-#line 112 "parser.hpp" /* yacc.c:1909  */
+#line 113 "parser.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

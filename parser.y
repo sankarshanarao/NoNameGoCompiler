@@ -9,7 +9,7 @@
 
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL TNEG TBAND TBOR TBXOR TAND TOR TLCHAN TRCHAN TSEQUAL
-%token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
+%token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT TSEMI
 %token <token> TPLUS TMINUS TMUL TDIV
 %token <token> TKFOR TKIF TKFUNC TKIMPORT TKMAIN TKPACKAGE TKVAR TKELSE
 %token <token> TDINT TDFLOAT TDBOOL TDSTRING
@@ -106,11 +106,12 @@ StatementList:
 
 Statementdash:
     If Statementdash
+    | For Statementdash
     |
     ;
 
 If:
-    TKIF TLPAREN TRPAREN CompoundBloc
+    TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc
     Else
     ;
 Else:
@@ -119,11 +120,28 @@ Else:
     |
     ;
 
+For:
+    TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
+    | TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
+    | TKFOR Declaration CompoundBloc
+    ;
+
 ConditionalStatement:
+    Operand ConditionalOperator Operand
+    ;
+ConditionalOperator:
+    TCEQ | TCNE | TBAND | TBOR | TBXOR | TAND | TOR
+    | TCLE | TCLT | TCGT | TCGE
+    ;
+Operand:
+    Int | Float | Identifier
     ;
 
 ArithmeticStatement:
+    IterativeStatement
+    ;
 
 IterativeStatement:
+    ;
 
 %%

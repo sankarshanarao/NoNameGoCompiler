@@ -50,6 +50,7 @@ digit [0-9]
 "-"                         { emptyLine=0; printf("TMINUS\n"); return TOKEN(TMINUS);}
 "*"                         { emptyLine=0; printf("TMUL\n"); return TOKEN(TMUL);}
 "/"                         { emptyLine=0; printf("TDIV\n"); return TOKEN(TDIV);}
+";"                         { emptyLine=0; printf("TSEMI\n"); return TOKEN(TSEMI);}
 
 
 for                         { emptyLine=0; printf("TKFOR\n"); return TOKEN(TKFOR);}    // keyword for

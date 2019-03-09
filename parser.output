@@ -1,20 +1,14 @@
+Nonterminals useless in grammar
+
+   ArithmeticStatement
+
+
 Terminals unused in grammar
 
    TIDENTIFIER
    TINTEGER
    TDOUBLE
-   TCEQ
-   TCNE
-   TCLT
-   TCLE
-   TCGT
-   TCGE
    TNEG
-   TBAND
-   TBOR
-   TBXOR
-   TAND
-   TOR
    TLCHAN
    TRCHAN
    TCOMMA
@@ -23,13 +17,17 @@ Terminals unused in grammar
    TMINUS
    TMUL
    TDIV
-   TKFOR
    TDINT
    TDFLOAT
    TDBOOL
    TDSTRING
    MultiCommentBegin
    MultiCommentEnd
+
+
+Rules useless in grammar
+
+   51 ArithmeticStatement: IterativeStatement
 
 
 State 8 conflicts: 1 reduce/reduce
@@ -77,13 +75,38 @@ Grammar
    24 StatementList: Declaration Statementdash
 
    25 Statementdash: If Statementdash
-   26              | %empty
+   26              | For Statementdash
+   27              | %empty
 
-   27 If: TKIF TLPAREN TRPAREN CompoundBloc Else
+   28 If: TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc Else
 
-   28 Else: TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
-   29     | TKELSE CompoundBloc
-   30     | %empty
+   29 Else: TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
+   30     | TKELSE CompoundBloc
+   31     | %empty
+
+   32 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
+   33    | TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
+   34    | TKFOR Declaration CompoundBloc
+
+   35 ConditionalStatement: Operand ConditionalOperator Operand
+
+   36 ConditionalOperator: TCEQ
+   37                    | TCNE
+   38                    | TBAND
+   39                    | TBOR
+   40                    | TBXOR
+   41                    | TAND
+   42                    | TOR
+   43                    | TCLE
+   44                    | TCLT
+   45                    | TCGT
+   46                    | TCGE
+
+   47 Operand: Int
+   48        | Float
+   49        | Identifier
+
+   50 IterativeStatement: %empty
 
 
 Terminals, with rules where they appear
@@ -93,91 +116,102 @@ error (256)
 TIDENTIFIER (258)
 TINTEGER (259)
 TDOUBLE (260)
-TCEQ (261)
-TCNE (262)
-TCLT (263)
-TCLE (264)
-TCGT (265)
-TCGE (266)
+TCEQ (261) 36
+TCNE (262) 37
+TCLT (263) 44
+TCLE (264) 43
+TCGT (265) 45
+TCGE (266) 46
 TEQUAL (267) 15
 TNEG (268)
-TBAND (269)
-TBOR (270)
-TBXOR (271)
-TAND (272)
-TOR (273)
+TBAND (269) 38
+TBOR (270) 39
+TBXOR (271) 40
+TAND (272) 41
+TOR (273) 42
 TLCHAN (274)
 TRCHAN (275)
 TSEQUAL (276) 16
-TLPAREN (277) 22 27 28
-TRPAREN (278) 22 27 28
+TLPAREN (277) 22 28 29
+TRPAREN (278) 22 28 29
 TLBRACE (279) 23
 TRBRACE (280) 23
 TCOMMA (281)
 TDOT (282)
-TPLUS (283)
-TMINUS (284)
-TMUL (285)
-TDIV (286)
-TKFOR (287)
-TKIF (288) 27 28
-TKFUNC (289) 22
-TKIMPORT (290) 10 11
-TKMAIN (291) 8 22
-TKPACKAGE (292) 8 9
-TKVAR (293) 15
-TKELSE (294) 28 29
-TDINT (295)
-TDFLOAT (296)
-TDBOOL (297)
-TDSTRING (298)
-BoolTrue (299) 17
-BoolFalse (300) 18
-String (301) 10 11 19
-Float (302) 20
-Int (303) 21
-MultiCommentBegin (304)
-MultiCommentEnd (305)
-Identifier (306) 9 15 16
-TTERM (307) 8 9 10 11 15 16 23
+TSEMI (283) 32 33
+TPLUS (284)
+TMINUS (285)
+TMUL (286)
+TDIV (287)
+TKFOR (288) 32 33 34
+TKIF (289) 28 29
+TKFUNC (290) 22
+TKIMPORT (291) 10 11
+TKMAIN (292) 8 22
+TKPACKAGE (293) 8 9
+TKVAR (294) 15
+TKELSE (295) 29 30
+TDINT (296)
+TDFLOAT (297)
+TDBOOL (298)
+TDSTRING (299)
+BoolTrue (300) 17
+BoolFalse (301) 18
+String (302) 10 11 19
+Float (303) 20 48
+Int (304) 21 47
+MultiCommentBegin (305)
+MultiCommentEnd (306)
+Identifier (307) 9 15 16 49
+TTERM (308) 8 9 10 11 15 16 23
 
 
 Nonterminals, with rules where they appear
 
-$accept (53)
+$accept (54)
     on left: 0
-program (54)
+program (55)
     on left: 1, on right: 0
-Stage2 (55)
+Stage2 (56)
     on left: 2 3, on right: 1
-Stage3 (56)
+Stage3 (57)
     on left: 4 5, on right: 2
-Stage4 (57)
+Stage4 (58)
     on left: 6 7, on right: 4
-PackageDefinition (58)
+PackageDefinition (59)
     on left: 8 9, on right: 1
-Imports (59)
+Imports (60)
     on left: 10, on right: 2
-SingleImports (60)
+SingleImports (61)
     on left: 11 12, on right: 10 11
-Declaration (61)
-    on left: 13 14, on right: 4 13 24
-VariableDecla (62)
+Declaration (62)
+    on left: 13 14, on right: 4 13 24 32 33 34
+VariableDecla (63)
     on left: 15 16, on right: 13
-Literal (63)
+Literal (64)
     on left: 17 18 19 20 21, on right: 15 16
-MainFunc (64)
+MainFunc (65)
     on left: 22, on right: 6
-CompoundBloc (65)
-    on left: 23, on right: 22 27 28 29
-StatementList (66)
+CompoundBloc (66)
+    on left: 23, on right: 22 28 29 30 32 33 34
+StatementList (67)
     on left: 24, on right: 23
-Statementdash (67)
-    on left: 25 26, on right: 24 25
-If (68)
-    on left: 27, on right: 25
-Else (69)
-    on left: 28 29 30, on right: 27 28
+Statementdash (68)
+    on left: 25 26 27, on right: 24 25 26
+If (69)
+    on left: 28, on right: 25
+Else (70)
+    on left: 29 30 31, on right: 28 29
+For (71)
+    on left: 32 33 34, on right: 26
+ConditionalStatement (72)
+    on left: 35, on right: 28 32 33
+ConditionalOperator (73)
+    on left: 36 37 38 39 40 41 42 43 44 45 46, on right: 35
+Operand (74)
+    on left: 47 48 49, on right: 35
+IterativeStatement (75)
+    on left: 50, on right: 32
 
 
 State 0
@@ -551,174 +585,481 @@ State 41
    16              | . Identifier TSEQUAL Literal TTERM
    24 StatementList: Declaration . Statementdash
    25 Statementdash: . If Statementdash
-   26              | . %empty  [TRBRACE]
-   27 If: . TKIF TLPAREN TRPAREN CompoundBloc Else
+   26              | . For Statementdash
+   27              | . %empty  [TRBRACE]
+   28 If: . TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc Else
+   32 For: . TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
+   33    | . TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
+   34    | . TKFOR Declaration CompoundBloc
 
-    TKIF        shift, and go to state 43
+    TKFOR       shift, and go to state 43
+    TKIF        shift, and go to state 44
     TKVAR       shift, and go to state 16
     Identifier  shift, and go to state 17
 
-    $default  reduce using rule 26 (Statementdash)
+    $default  reduce using rule 27 (Statementdash)
 
     VariableDecla  go to state 19
-    Statementdash  go to state 44
-    If             go to state 45
+    Statementdash  go to state 45
+    If             go to state 46
+    For            go to state 47
 
 
 State 42
 
    23 CompoundBloc: TLBRACE TTERM StatementList . TRBRACE TTERM
 
-    TRBRACE  shift, and go to state 46
+    TRBRACE  shift, and go to state 48
 
 
 State 43
 
-   27 If: TKIF . TLPAREN TRPAREN CompoundBloc Else
+   13 Declaration: . Declaration VariableDecla
+   14            | . %empty
+   32 For: TKFOR . Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
+   33    | TKFOR . Declaration TSEMI ConditionalStatement CompoundBloc
+   34    | TKFOR . Declaration CompoundBloc
 
-    TLPAREN  shift, and go to state 47
+    $default  reduce using rule 14 (Declaration)
+
+    Declaration  go to state 49
 
 
 State 44
+
+   28 If: TKIF . TLPAREN ConditionalStatement TRPAREN CompoundBloc Else
+
+    TLPAREN  shift, and go to state 50
+
+
+State 45
 
    24 StatementList: Declaration Statementdash .
 
     $default  reduce using rule 24 (StatementList)
 
 
-State 45
+State 46
 
    25 Statementdash: . If Statementdash
    25              | If . Statementdash
-   26              | . %empty  [TRBRACE]
-   27 If: . TKIF TLPAREN TRPAREN CompoundBloc Else
+   26              | . For Statementdash
+   27              | . %empty  [TRBRACE]
+   28 If: . TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc Else
+   32 For: . TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
+   33    | . TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
+   34    | . TKFOR Declaration CompoundBloc
 
-    TKIF  shift, and go to state 43
+    TKFOR  shift, and go to state 43
+    TKIF   shift, and go to state 44
 
-    $default  reduce using rule 26 (Statementdash)
+    $default  reduce using rule 27 (Statementdash)
 
-    Statementdash  go to state 48
-    If             go to state 45
-
-
-State 46
-
-   23 CompoundBloc: TLBRACE TTERM StatementList TRBRACE . TTERM
-
-    TTERM  shift, and go to state 49
+    Statementdash  go to state 51
+    If             go to state 46
+    For            go to state 47
 
 
 State 47
 
-   27 If: TKIF TLPAREN . TRPAREN CompoundBloc Else
+   25 Statementdash: . If Statementdash
+   26              | . For Statementdash
+   26              | For . Statementdash
+   27              | . %empty  [TRBRACE]
+   28 If: . TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc Else
+   32 For: . TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
+   33    | . TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
+   34    | . TKFOR Declaration CompoundBloc
 
-    TRPAREN  shift, and go to state 50
+    TKFOR  shift, and go to state 43
+    TKIF   shift, and go to state 44
+
+    $default  reduce using rule 27 (Statementdash)
+
+    Statementdash  go to state 52
+    If             go to state 46
+    For            go to state 47
 
 
 State 48
+
+   23 CompoundBloc: TLBRACE TTERM StatementList TRBRACE . TTERM
+
+    TTERM  shift, and go to state 53
+
+
+State 49
+
+   13 Declaration: Declaration . VariableDecla
+   15 VariableDecla: . TKVAR Identifier TEQUAL Literal TTERM
+   16              | . Identifier TSEQUAL Literal TTERM
+   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
+   32 For: TKFOR Declaration . TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
+   33    | TKFOR Declaration . TSEMI ConditionalStatement CompoundBloc
+   34    | TKFOR Declaration . CompoundBloc
+
+    TLBRACE     shift, and go to state 37
+    TSEMI       shift, and go to state 54
+    TKVAR       shift, and go to state 16
+    Identifier  shift, and go to state 17
+
+    VariableDecla  go to state 19
+    CompoundBloc   go to state 55
+
+
+State 50
+
+   28 If: TKIF TLPAREN . ConditionalStatement TRPAREN CompoundBloc Else
+   35 ConditionalStatement: . Operand ConditionalOperator Operand
+   47 Operand: . Int
+   48        | . Float
+   49        | . Identifier
+
+    Float       shift, and go to state 56
+    Int         shift, and go to state 57
+    Identifier  shift, and go to state 58
+
+    ConditionalStatement  go to state 59
+    Operand               go to state 60
+
+
+State 51
 
    25 Statementdash: If Statementdash .
 
     $default  reduce using rule 25 (Statementdash)
 
 
-State 49
+State 52
+
+   26 Statementdash: For Statementdash .
+
+    $default  reduce using rule 26 (Statementdash)
+
+
+State 53
 
    23 CompoundBloc: TLBRACE TTERM StatementList TRBRACE TTERM .
 
     $default  reduce using rule 23 (CompoundBloc)
 
 
-State 50
-
-   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   27 If: TKIF TLPAREN TRPAREN . CompoundBloc Else
-
-    TLBRACE  shift, and go to state 37
-
-    CompoundBloc  go to state 51
-
-
-State 51
-
-   27 If: TKIF TLPAREN TRPAREN CompoundBloc . Else
-   28 Else: . TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
-   29     | . TKELSE CompoundBloc
-   30     | . %empty  [TRBRACE, TKIF]
-
-    TKELSE  shift, and go to state 52
-
-    $default  reduce using rule 30 (Else)
-
-    Else  go to state 53
-
-
-State 52
-
-   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   28 Else: TKELSE . TKIF TLPAREN TRPAREN CompoundBloc Else
-   29     | TKELSE . CompoundBloc
-
-    TLBRACE  shift, and go to state 37
-    TKIF     shift, and go to state 54
-
-    CompoundBloc  go to state 55
-
-
-State 53
-
-   27 If: TKIF TLPAREN TRPAREN CompoundBloc Else .
-
-    $default  reduce using rule 27 (If)
-
-
 State 54
 
-   28 Else: TKELSE TKIF . TLPAREN TRPAREN CompoundBloc Else
+   32 For: TKFOR Declaration TSEMI . ConditionalStatement TSEMI IterativeStatement CompoundBloc
+   33    | TKFOR Declaration TSEMI . ConditionalStatement CompoundBloc
+   35 ConditionalStatement: . Operand ConditionalOperator Operand
+   47 Operand: . Int
+   48        | . Float
+   49        | . Identifier
 
-    TLPAREN  shift, and go to state 56
+    Float       shift, and go to state 56
+    Int         shift, and go to state 57
+    Identifier  shift, and go to state 58
+
+    ConditionalStatement  go to state 61
+    Operand               go to state 60
 
 
 State 55
 
-   29 Else: TKELSE CompoundBloc .
+   34 For: TKFOR Declaration CompoundBloc .
 
-    $default  reduce using rule 29 (Else)
+    $default  reduce using rule 34 (For)
 
 
 State 56
 
-   28 Else: TKELSE TKIF TLPAREN . TRPAREN CompoundBloc Else
+   48 Operand: Float .
 
-    TRPAREN  shift, and go to state 57
+    $default  reduce using rule 48 (Operand)
 
 
 State 57
 
-   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   28 Else: TKELSE TKIF TLPAREN TRPAREN . CompoundBloc Else
+   47 Operand: Int .
 
-    TLBRACE  shift, and go to state 37
-
-    CompoundBloc  go to state 58
+    $default  reduce using rule 47 (Operand)
 
 
 State 58
 
-   28 Else: . TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
-   28     | TKELSE TKIF TLPAREN TRPAREN CompoundBloc . Else
-   29     | . TKELSE CompoundBloc
-   30     | . %empty  [TRBRACE, TKIF]
+   49 Operand: Identifier .
 
-    TKELSE  shift, and go to state 52
-
-    $default  reduce using rule 30 (Else)
-
-    Else  go to state 59
+    $default  reduce using rule 49 (Operand)
 
 
 State 59
 
-   28 Else: TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else .
+   28 If: TKIF TLPAREN ConditionalStatement . TRPAREN CompoundBloc Else
 
-    $default  reduce using rule 28 (Else)
+    TRPAREN  shift, and go to state 62
+
+
+State 60
+
+   35 ConditionalStatement: Operand . ConditionalOperator Operand
+   36 ConditionalOperator: . TCEQ
+   37                    | . TCNE
+   38                    | . TBAND
+   39                    | . TBOR
+   40                    | . TBXOR
+   41                    | . TAND
+   42                    | . TOR
+   43                    | . TCLE
+   44                    | . TCLT
+   45                    | . TCGT
+   46                    | . TCGE
+
+    TCEQ   shift, and go to state 63
+    TCNE   shift, and go to state 64
+    TCLT   shift, and go to state 65
+    TCLE   shift, and go to state 66
+    TCGT   shift, and go to state 67
+    TCGE   shift, and go to state 68
+    TBAND  shift, and go to state 69
+    TBOR   shift, and go to state 70
+    TBXOR  shift, and go to state 71
+    TAND   shift, and go to state 72
+    TOR    shift, and go to state 73
+
+    ConditionalOperator  go to state 74
+
+
+State 61
+
+   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
+   32 For: TKFOR Declaration TSEMI ConditionalStatement . TSEMI IterativeStatement CompoundBloc
+   33    | TKFOR Declaration TSEMI ConditionalStatement . CompoundBloc
+
+    TLBRACE  shift, and go to state 37
+    TSEMI    shift, and go to state 75
+
+    CompoundBloc  go to state 76
+
+
+State 62
+
+   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
+   28 If: TKIF TLPAREN ConditionalStatement TRPAREN . CompoundBloc Else
+
+    TLBRACE  shift, and go to state 37
+
+    CompoundBloc  go to state 77
+
+
+State 63
+
+   36 ConditionalOperator: TCEQ .
+
+    $default  reduce using rule 36 (ConditionalOperator)
+
+
+State 64
+
+   37 ConditionalOperator: TCNE .
+
+    $default  reduce using rule 37 (ConditionalOperator)
+
+
+State 65
+
+   44 ConditionalOperator: TCLT .
+
+    $default  reduce using rule 44 (ConditionalOperator)
+
+
+State 66
+
+   43 ConditionalOperator: TCLE .
+
+    $default  reduce using rule 43 (ConditionalOperator)
+
+
+State 67
+
+   45 ConditionalOperator: TCGT .
+
+    $default  reduce using rule 45 (ConditionalOperator)
+
+
+State 68
+
+   46 ConditionalOperator: TCGE .
+
+    $default  reduce using rule 46 (ConditionalOperator)
+
+
+State 69
+
+   38 ConditionalOperator: TBAND .
+
+    $default  reduce using rule 38 (ConditionalOperator)
+
+
+State 70
+
+   39 ConditionalOperator: TBOR .
+
+    $default  reduce using rule 39 (ConditionalOperator)
+
+
+State 71
+
+   40 ConditionalOperator: TBXOR .
+
+    $default  reduce using rule 40 (ConditionalOperator)
+
+
+State 72
+
+   41 ConditionalOperator: TAND .
+
+    $default  reduce using rule 41 (ConditionalOperator)
+
+
+State 73
+
+   42 ConditionalOperator: TOR .
+
+    $default  reduce using rule 42 (ConditionalOperator)
+
+
+State 74
+
+   35 ConditionalStatement: Operand ConditionalOperator . Operand
+   47 Operand: . Int
+   48        | . Float
+   49        | . Identifier
+
+    Float       shift, and go to state 56
+    Int         shift, and go to state 57
+    Identifier  shift, and go to state 58
+
+    Operand  go to state 78
+
+
+State 75
+
+   32 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI . IterativeStatement CompoundBloc
+   50 IterativeStatement: . %empty
+
+    $default  reduce using rule 50 (IterativeStatement)
+
+    IterativeStatement  go to state 79
+
+
+State 76
+
+   33 For: TKFOR Declaration TSEMI ConditionalStatement CompoundBloc .
+
+    $default  reduce using rule 33 (For)
+
+
+State 77
+
+   28 If: TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc . Else
+   29 Else: . TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
+   30     | . TKELSE CompoundBloc
+   31     | . %empty  [TRBRACE, TKFOR, TKIF]
+
+    TKELSE  shift, and go to state 80
+
+    $default  reduce using rule 31 (Else)
+
+    Else  go to state 81
+
+
+State 78
+
+   35 ConditionalStatement: Operand ConditionalOperator Operand .
+
+    $default  reduce using rule 35 (ConditionalStatement)
+
+
+State 79
+
+   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
+   32 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement . CompoundBloc
+
+    TLBRACE  shift, and go to state 37
+
+    CompoundBloc  go to state 82
+
+
+State 80
+
+   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
+   29 Else: TKELSE . TKIF TLPAREN TRPAREN CompoundBloc Else
+   30     | TKELSE . CompoundBloc
+
+    TLBRACE  shift, and go to state 37
+    TKIF     shift, and go to state 83
+
+    CompoundBloc  go to state 84
+
+
+State 81
+
+   28 If: TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc Else .
+
+    $default  reduce using rule 28 (If)
+
+
+State 82
+
+   32 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc .
+
+    $default  reduce using rule 32 (For)
+
+
+State 83
+
+   29 Else: TKELSE TKIF . TLPAREN TRPAREN CompoundBloc Else
+
+    TLPAREN  shift, and go to state 85
+
+
+State 84
+
+   30 Else: TKELSE CompoundBloc .
+
+    $default  reduce using rule 30 (Else)
+
+
+State 85
+
+   29 Else: TKELSE TKIF TLPAREN . TRPAREN CompoundBloc Else
+
+    TRPAREN  shift, and go to state 86
+
+
+State 86
+
+   23 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
+   29 Else: TKELSE TKIF TLPAREN TRPAREN . CompoundBloc Else
+
+    TLBRACE  shift, and go to state 37
+
+    CompoundBloc  go to state 87
+
+
+State 87
+
+   29 Else: . TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
+   29     | TKELSE TKIF TLPAREN TRPAREN CompoundBloc . Else
+   30     | . TKELSE CompoundBloc
+   31     | . %empty  [TRBRACE, TKFOR, TKIF]
+
+    TKELSE  shift, and go to state 80
+
+    $default  reduce using rule 31 (Else)
+
+    Else  go to state 88
+
+
+State 88
+
+   29 Else: TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else .
+
+    $default  reduce using rule 29 (Else)
