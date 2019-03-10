@@ -2,11 +2,13 @@
 #include <string>
 #include <iostream>
 #include "parser.hpp"
-#define SAVE_TOKEN yylval.string= new std::string(yytext,yyleng)
+#define SAVE_TOKEN yylval.string = new std::string(yytext,yyleng)
 #define TOKEN(t) (yylval.token=t)
 int emptyLine = 1;
 int linenumber = 1;
 %}
+
+%option yylineno
 
 alpha [a-zA-Z]
 digit [0-9]
