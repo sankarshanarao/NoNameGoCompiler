@@ -128,17 +128,29 @@ ConditionalStatement:
     ;
 ConditionalOperator:
     TCEQ | TCNE | TBAND | TBOR | TBXOR | TAND | TOR
-    | TCLE | TCLT | TCGT | TCGE
+    | TCLE | TCLT | TCGT | TCGE | TNEG
     ;
 Operand:
     Int | Float | Identifier
     ;
 
-ArithmeticStatement:
-    IterativeStatement
+IterativeStatement: 
+    AssignmentStatement;
+
+AssignmentStatement: 
+    Identifier TEQUAL ArithmeticStatement;
+
+ArithmeticStatement: 
+    Identifier ArithOper Identifier
+    | Identifier ArithOper Literal
+    | Literal ArithOper Identifier
+    | Literal ArithOper Literal
     ;
 
-IterativeStatement:
+ArithOper: 
+    TMINUS
+    | TPLUS
+    | TMUL
+    | TDIV
     ;
-
 %%
