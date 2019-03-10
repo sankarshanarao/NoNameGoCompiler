@@ -163,8 +163,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -507,6 +526,13 @@ static const flex_int16_t yy_chk[227] =
        98,   98,   98,   98,   98,   98
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[49] =
+    {   0,
+0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -528,10 +554,10 @@ char *yytext;
 #include "parser.hpp"
 #define SAVE_TOKEN yylval.string= new std::string(yytext,yyleng)
 #define TOKEN(t) (yylval.token=t)
-
 int emptyLine = 1;
-#line 534 "tokens.cpp"
-#line 535 "tokens.cpp"
+int linenumber = 1;
+#line 560 "tokens.cpp"
+#line 561 "tokens.cpp"
 
 #define INITIAL 0
 
@@ -748,9 +774,9 @@ YY_DECL
 		}
 
 	{
-#line 14 "tokens.l"
+#line 16 "tokens.l"
 
-#line 754 "tokens.cpp"
+#line 780 "tokens.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -796,6 +822,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -809,14 +845,15 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 15 "tokens.l"
+#line 17 "tokens.l"
 ;   // ignoring spaces and tabs
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 16 "tokens.l"
+#line 18 "tokens.l"
 {
+    linenumber++;
     if(emptyLine) {
         // std::cout<<"emptyLine";
         emptyLine=1;
@@ -829,239 +866,239 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "tokens.l"
+#line 30 "tokens.l"
 { emptyLine=0; printf("TEQUAL\n"); return TOKEN(TEQUAL);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 28 "tokens.l"
+#line 31 "tokens.l"
 { emptyLine=0; printf("TSEQUAL\n"); return TOKEN(TSEQUAL);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 29 "tokens.l"
+#line 32 "tokens.l"
 { emptyLine=0; printf("TCEQ\n"); return TOKEN(TCEQ);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 30 "tokens.l"
+#line 33 "tokens.l"
 { emptyLine=0; printf("TCNE\n"); return TOKEN(TCNE);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 31 "tokens.l"
+#line 34 "tokens.l"
 { emptyLine=0; printf("TNEG\n"); return TOKEN(TNEG);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 32 "tokens.l"
+#line 35 "tokens.l"
 { emptyLine=0; printf("TBAND\n"); return TOKEN(TBAND);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 33 "tokens.l"
+#line 36 "tokens.l"
 { emptyLine=0; printf("TBOR\n"); return TOKEN(TBOR);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 34 "tokens.l"
+#line 37 "tokens.l"
 { emptyLine=0; printf("TBXOR\n"); return TOKEN(TBXOR);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 35 "tokens.l"
+#line 38 "tokens.l"
 { emptyLine=0; printf("TAND\n"); return TOKEN(TAND);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 36 "tokens.l"
+#line 39 "tokens.l"
 { emptyLine=0; printf("TOR\n"); return TOKEN(TOR);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 37 "tokens.l"
+#line 40 "tokens.l"
 { emptyLine=0; printf("TLCHAN\n"); return TOKEN(TLCHAN);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 38 "tokens.l"
+#line 41 "tokens.l"
 { emptyLine=0; printf("TRCHAN\n"); return TOKEN(TRCHAN);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 39 "tokens.l"
+#line 42 "tokens.l"
 { emptyLine=0; printf("TCLT\n"); return TOKEN(TCLT);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 40 "tokens.l"
+#line 43 "tokens.l"
 { emptyLine=0; printf("TCLE\n"); return TOKEN(TCLE);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 41 "tokens.l"
+#line 44 "tokens.l"
 { emptyLine=0; printf("TCGT\n"); return TOKEN(TCGT);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 42 "tokens.l"
+#line 45 "tokens.l"
 { emptyLine=0; printf("TCGE\n"); return TOKEN(TCGE);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 43 "tokens.l"
+#line 46 "tokens.l"
 { emptyLine=0; printf("TLPAREN\n"); return TOKEN(TLPAREN);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 44 "tokens.l"
+#line 47 "tokens.l"
 { emptyLine=0; printf("TRPAREN\n"); return TOKEN(TRPAREN);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 45 "tokens.l"
+#line 48 "tokens.l"
 { emptyLine=0; printf("TLBRACE\n"); return TOKEN(TLBRACE);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 46 "tokens.l"
+#line 49 "tokens.l"
 { emptyLine=0; printf("TRBRACE\n"); return TOKEN(TRBRACE);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 47 "tokens.l"
+#line 50 "tokens.l"
 { emptyLine=0; printf("TDOT\n"); return TOKEN(TDOT);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 48 "tokens.l"
+#line 51 "tokens.l"
 { emptyLine=0; printf("TCOMMA\n"); return TOKEN(TCOMMA);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 49 "tokens.l"
+#line 52 "tokens.l"
 { emptyLine=0; printf("TPLUS\n"); return TOKEN(TPLUS);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 50 "tokens.l"
+#line 53 "tokens.l"
 { emptyLine=0; printf("TMINUS\n"); return TOKEN(TMINUS);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 51 "tokens.l"
+#line 54 "tokens.l"
 { emptyLine=0; printf("TMUL\n"); return TOKEN(TMUL);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 52 "tokens.l"
+#line 55 "tokens.l"
 { emptyLine=0; printf("TDIV\n"); return TOKEN(TDIV);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 53 "tokens.l"
+#line 56 "tokens.l"
 { emptyLine=0; printf("TSEMI\n"); return TOKEN(TSEMI);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 56 "tokens.l"
+#line 59 "tokens.l"
 { emptyLine=0; printf("TKFOR\n"); return TOKEN(TKFOR);}    // keyword for
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 57 "tokens.l"
+#line 60 "tokens.l"
 { emptyLine=0; printf("TKIF\n"); return TOKEN(TKIF);} // keyword if
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 58 "tokens.l"
+#line 61 "tokens.l"
 { emptyLine=0; printf("TKELSE\n"); return TOKEN(TKELSE);} // keyword else
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 59 "tokens.l"
+#line 62 "tokens.l"
 { emptyLine=0; printf("TKFUNC\n"); return TOKEN(TKFUNC);}   // keyword func
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 60 "tokens.l"
+#line 63 "tokens.l"
 { emptyLine=0; printf("TKIMPORT\n"); return TOKEN(TKIMPORT);}   // keyword import
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 61 "tokens.l"
+#line 64 "tokens.l"
 { emptyLine=0; printf("TKMAIN\n"); return TOKEN(TKMAIN);} // keyword main
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 62 "tokens.l"
+#line 65 "tokens.l"
 { emptyLine=0; printf("TKPACKKAGE\n"); return TOKEN(TKPACKAGE);} // keyword package
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 63 "tokens.l"
+#line 66 "tokens.l"
 { emptyLine=0; printf("TKVAR\n"); return TOKEN(TKVAR);} // keyword var
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 66 "tokens.l"
+#line 69 "tokens.l"
 { emptyLine=0; printf("BoolTrue\n"); SAVE_TOKEN; return BoolTrue;}   // literal bool
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 67 "tokens.l"
+#line 70 "tokens.l"
 { emptyLine=0; printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse;}  // literal bool
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 68 "tokens.l"
+#line 71 "tokens.l"
 { emptyLine=0; printf("String\n"); SAVE_TOKEN; return String;}  // literal string
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 69 "tokens.l"
+#line 72 "tokens.l"
 { emptyLine=0; printf("Float\n"); SAVE_TOKEN; return Float;}  // literal float
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 70 "tokens.l"
+#line 73 "tokens.l"
 { emptyLine=0; printf("Int\n"); SAVE_TOKEN; return Int;}    // literal int
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 74 "tokens.l"
+#line 77 "tokens.l"
 { emptyLine=0; printf("Identifier: %s\n", yytext); SAVE_TOKEN; return Identifier;} // identifier
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 76 "tokens.l"
+#line 79 "tokens.l"
 ;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 77 "tokens.l"
+#line 80 "tokens.l"
 { emptyLine=0; printf("MultiCommentBegin\n"); SAVE_TOKEN; return MultiCommentBegin;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 78 "tokens.l"
+#line 81 "tokens.l"
 { emptyLine=0; printf("MultiCommentEnd"); SAVE_TOKEN; return MultiCommentEnd;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 79 "tokens.l"
+#line 82 "tokens.l"
 { emptyLine=0; printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 82 "tokens.l"
+#line 85 "tokens.l"
 { emptyLine=0; printf("EOF Encountered\n"); return EOF;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 83 "tokens.l"
+#line 86 "tokens.l"
 ECHO;
 	YY_BREAK
-#line 1065 "tokens.cpp"
+#line 1102 "tokens.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1427,6 +1464,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1503,6 +1544,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1970,6 +2016,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -2064,5 +2113,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 83 "tokens.l"
+#line 86 "tokens.l"
 

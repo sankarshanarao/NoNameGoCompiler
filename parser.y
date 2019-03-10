@@ -2,10 +2,15 @@
     #include <iostream>
     #include <string>
 
+    extern int linenumber; 
     extern int yylex();
     extern int insertSymbolTable(std::string);
-    void yyerror(const char *s) { printf("ERROR: %s:", s); }
+    void yyerror(const char *s) {
+    printf("LINE :%d ERROR:%s\n", linenumber, s); 
+    }
 %}
+
+
 
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL TNEG TBAND TBOR TBXOR TAND TOR TLCHAN TRCHAN TSEQUAL
@@ -27,14 +32,6 @@
 %start program
 
 %%
-
-// program:
-//     PackageDefinition
-//     Imports
-//     | {
-//         std::cout<<"Empty File"<<std::endl;
-//     }
-//     ;
 
 program:
     PackageDefinition Stage2

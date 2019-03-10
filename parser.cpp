@@ -67,11 +67,16 @@
     #include <iostream>
     #include <string>
 
+    extern int linenumber; 
+
     extern int yylex();
     extern int insertSymbolTable(std::string);
-    void yyerror(const char *s) { printf("ERROR: %s:", s); }
+    void yyerror(const char *s) {
+    printf("LINE :%d ERROR:%s\n", linenumber, s); 
+    }
 
-#line 75 "parser.cpp" /* yacc.c:339  */
+
+#line 80 "parser.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -165,12 +170,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 19 "parser.y" /* yacc.c:355  */
+#line 26 "parser.y" /* yacc.c:355  */
 
     std::string *string;
     int token;
 
-#line 174 "parser.cpp" /* yacc.c:355  */
+#line 179 "parser.cpp" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -187,7 +192,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 191 "parser.cpp" /* yacc.c:358  */
+#line 196 "parser.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -489,12 +494,12 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    40,    40,    42,    43,    46,    47,    50,    51,    56,
-      57,    62,    66,    67,    72,    73,    77,    78,    82,    83,
-      84,    85,    86,    90,    94,   104,   108,   109,   110,   114,
-     118,   119,   120,   124,   125,   126,   130,   133,   133,   133,
-     133,   133,   133,   133,   134,   134,   134,   134,   137,   137,
-     137,   144
+       0,    39,    39,    41,    42,    45,    46,    49,    50,    55,
+      56,    61,    65,    66,    71,    72,    76,    77,    81,    82,
+      83,    84,    85,    89,    93,   103,   107,   108,   109,   113,
+     117,   118,   119,   123,   124,   125,   129,   132,   132,   132,
+     132,   132,   132,   132,   133,   133,   133,   133,   136,   136,
+     136,   143
 };
 #endif
 
@@ -1328,7 +1333,7 @@ yyreduce:
   switch (yyn)
     {
       
-#line 1332 "parser.cpp" /* yacc.c:1646  */
+#line 1337 "parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1556,4 +1561,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 147 "parser.y" /* yacc.c:1906  */
+#line 146 "parser.y" /* yacc.c:1906  */
+
