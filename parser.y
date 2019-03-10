@@ -34,18 +34,8 @@
 %%
 
 program:
-    PackageDefinition Stage2
-Stage2:
-    Imports Stage3
-    |
-    ;
-Stage3:
-    Declaration Stage4
-    |
-    ;
-Stage4:
-    MainFunc
-    |
+    PackageDefinition Imports Declaration MainFunc
+    | PackageDefinition Declaration MainFunc
     ;
 
 // Package
@@ -112,7 +102,7 @@ If:
     Else
     ;
 Else:
-    TKELSE TKIF TLPAREN TRPAREN CompoundBloc Else
+    TKELSE TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc Else
     | TKELSE CompoundBloc
     |
     ;
