@@ -8,8 +8,6 @@ int emptyLine = 1;
 int linenumber = 1;
 %}
 
-%option yylineno
-
 alpha [a-zA-Z]
 digit [0-9]
 
