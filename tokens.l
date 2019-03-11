@@ -18,10 +18,10 @@ digit [0-9]
 [\n]                        {
     linenumber++;
     if(emptyLine) {
-        // std::cout<<"emptyLine";
+        std::cout<<"emptyLine"<<yylineno<<"\n";
         emptyLine=1;
     } else {
-        // std::cout<<"newLine";
+        std::cout<<"newLine"<<yylineno<<"\n";
         emptyLine=1;
         return TTERM;
     }
@@ -81,6 +81,4 @@ false                       { emptyLine=0; printf("BoolFalse\n"); SAVE_TOKEN;ret
 (.*)*.*\*\/               { emptyLine=0; printf("MultiCommentEnd"); SAVE_TOKEN; return MultiCommentEnd;}
 .                         { emptyLine=0; printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
 
-
-<<EOF>>                   { emptyLine=0; printf("EOF Encountered\n"); return EOF;}
 %%

@@ -555,7 +555,7 @@ char *yytext;
 #include <string>
 #include <iostream>
 #include "parser.hpp"
-#define SAVE_TOKEN yylval.string= new std::string(yytext,yyleng)
+#define SAVE_TOKEN yylval.string = new std::string(yytext,yyleng)
 #define TOKEN(t) (yylval.token=t)
 int emptyLine = 1;
 int linenumber = 1;
@@ -848,10 +848,10 @@ YY_RULE_SETUP
 {
     linenumber++;
     if(emptyLine) {
-        // std::cout<<"emptyLine";
+        std::cout<<"emptyLine"<<yylineno<<"\n";
         emptyLine=1;
     } else {
-        // std::cout<<"newLine";
+        std::cout<<"newLine"<<yylineno<<"\n";
         emptyLine=1;
         return TTERM;
     }
@@ -1082,16 +1082,14 @@ YY_RULE_SETUP
 #line 82 "tokens.l"
 { emptyLine=0; printf("Unknown token\n"); SAVE_TOKEN; return yytext[0];}
 	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 85 "tokens.l"
-{ emptyLine=0; printf("EOF Encountered\n"); return EOF;}
-	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 86 "tokens.l"
+#line 84 "tokens.l"
 ECHO;
 	YY_BREAK
-#line 1095 "tokens.cpp"
+#line 1091 "tokens.cpp"
+case YY_STATE_EOF(INITIAL):
+	yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2098,6 +2096,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 86 "tokens.l"
+#line 84 "tokens.l"
 
 

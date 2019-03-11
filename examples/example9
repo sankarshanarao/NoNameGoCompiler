@@ -8,4 +8,7 @@ a :=7
 n :=3
 
 func main(){
+    for {
+        
+    }
 }

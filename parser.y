@@ -8,6 +8,10 @@
     void yyerror(const char *s) {
     printf("LINE :%d ERROR:%s\n", linenumber, s); 
     }
+
+    using namespace std;
+    extern int insertSymbolTable(string s);
+    extern int definedBefore(string s);
 %}
 
 
@@ -25,6 +29,8 @@
     std::string *string;
     int token;
 }
+
+%type <string> Literal
 
 %left TPLUS TMINUS
 %left TMUL TDIV
@@ -61,20 +67,38 @@ Declaration:
     ;
 
 VariableDecla:
-    TKVAR Identifier TEQUAL Literal TTERM
-    | Identifier TSEQUAL Literal TTERM
+    TKVAR Identifier TEQUAL Literal TTERM {
+        cout<<"VarDeclTrial:"<<$2<<endl;
+    }
+    | Identifier TSEQUAL Literal TTERM {
+        // string s = $3;
+        cout<<"VarDeclTrial:"<<*$3<<endl;
+    }
     ;
 
 Literal:
-    BoolTrue
-    | BoolFalse
-    | String
-    | Float
-    | Int
+    BoolTrue {
+        $$ = new string("hello");
+        cout<<"literal:"<<$1;
+    }
+    | BoolFalse {
+        $$ = new string("hello");
+    }
+    | String {
+        $$ = new string("hello");
+    }
+    | Float {
+        $$ = new string("hello");
+    }
+    | Int {
+        $$ = new string("hello");
+    }
     ;
 
 MainFunc:
-    TKFUNC TKMAIN TLPAREN TRPAREN CompoundBloc
+    TKFUNC TKMAIN TLPAREN TRPAREN CompoundBloc {
+        std::cout<<"MainFunction"<<std::endl;
+    }
     ;
 
 CompoundBloc:

@@ -188,6 +188,10 @@
     printf("LINE :%d ERROR:%s\n", linenumber, s); 
     }
 
+    using namespace std;
+    extern int insertSymbolTable(string s);
+    extern int definedBefore(string s);
+
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -209,13 +213,13 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 24 "parser.y"
+#line 28 "parser.y"
 {
     std::string *string;
     int token;
 }
 /* Line 193 of yacc.c.  */
-#line 219 "parser.cpp"
+#line 223 "parser.cpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -228,7 +232,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 232 "parser.cpp"
+#line 236 "parser.cpp"
 
 #ifdef short
 # undef short
@@ -536,12 +540,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    37,    37,    38,    43,    44,    49,    53,    54,    59,
-      60,    64,    65,    69,    70,    71,    72,    73,    77,    81,
-      91,    95,    96,    97,   101,   105,   106,   107,   111,   112,
-     113,   117,   120,   120,   120,   120,   120,   120,   120,   121,
-     121,   121,   121,   121,   124,   124,   124,   128,   131,   134,
-     135,   136,   137,   141,   142,   143,   144
+       0,    43,    43,    44,    49,    50,    55,    59,    60,    65,
+      66,    70,    73,    80,    84,    87,    90,    93,    99,   105,
+     115,   119,   120,   121,   125,   129,   130,   131,   135,   136,
+     137,   141,   144,   144,   144,   144,   144,   144,   144,   145,
+     145,   145,   145,   145,   148,   148,   148,   152,   155,   158,
+     159,   160,   161,   165,   166,   167,   168
 };
 #endif
 
@@ -1520,9 +1524,67 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
+        case 11:
+#line 70 "parser.y"
+    {
+        cout<<"VarDeclTrial:"<<(yyvsp[(2) - (5)].token)<<endl;
+    ;}
+    break;
+
+  case 12:
+#line 73 "parser.y"
+    {
+        // string s = $3;
+        cout<<"VarDeclTrial:"<<*(yyvsp[(3) - (4)].string)<<endl;
+    ;}
+    break;
+
+  case 13:
+#line 80 "parser.y"
+    {
+        (yyval.string) = new string("hello");
+        cout<<"literal:"<<(yyvsp[(1) - (1)].token);
+    ;}
+    break;
+
+  case 14:
+#line 84 "parser.y"
+    {
+        (yyval.string) = new string("hello");
+    ;}
+    break;
+
+  case 15:
+#line 87 "parser.y"
+    {
+        (yyval.string) = new string("hello");
+    ;}
+    break;
+
+  case 16:
+#line 90 "parser.y"
+    {
+        (yyval.string) = new string("hello");
+    ;}
+    break;
+
+  case 17:
+#line 93 "parser.y"
+    {
+        (yyval.string) = new string("hello");
+    ;}
+    break;
+
+  case 18:
+#line 99 "parser.y"
+    {
+        std::cout<<"MainFunction"<<std::endl;
+    ;}
+    break;
+
+
 /* Line 1267 of yacc.c.  */
-#line 1526 "parser.cpp"
+#line 1588 "parser.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1736,6 +1798,6 @@ yyreturn:
 }
 
 
-#line 146 "parser.y"
+#line 170 "parser.y"
 
 
