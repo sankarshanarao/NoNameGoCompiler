@@ -1,6 +1,7 @@
 %{
     #include <iostream>
     #include <string>
+    #include "ast-node.hpp"
 
     extern int linenumber; 
     extern int yylex();

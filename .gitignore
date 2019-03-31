@@ -3,3 +3,4 @@ lex.yy.c
 *.cpp
 *.hpp
 *.output
+.vscode
