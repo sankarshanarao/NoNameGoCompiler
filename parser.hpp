@@ -150,7 +150,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 28 "parser.y"
+#line 29 "parser.y"
 {
     std::string *string;
     int token;

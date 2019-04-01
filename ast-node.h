@@ -3,7 +3,8 @@
 
 class Expression
 {
-
+    public:
+    
 };
 
 class Statement
