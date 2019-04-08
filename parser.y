@@ -27,6 +27,7 @@
 %token <token> TTERM
 
 %union {
+    Node *node;
     std::string *string;
     int token;
 }

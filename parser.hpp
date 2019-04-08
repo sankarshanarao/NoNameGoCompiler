@@ -152,11 +152,12 @@
 typedef union YYSTYPE
 #line 29 "parser.y"
 {
+    Node *node;
     std::string *string;
     int token;
 }
 /* Line 1529 of yacc.c.  */
-#line 160 "parser.hpp"
+#line 161 "parser.hpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

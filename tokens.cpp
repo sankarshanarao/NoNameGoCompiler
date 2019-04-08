@@ -1056,12 +1056,12 @@ YY_RULE_SETUP
 case 42:
 YY_RULE_SETUP
 #line 74 "tokens.l"
-{ emptyLine=0; printf("Int\n"); SAVE_TOKEN; return INT;}    // literal int
+{ emptyLine=0; printf("Int\n"); SAVE_TOKEN; return Int;}    // literal int
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 75 "tokens.l"
-{ emptyLine=0; printf("Identifier: %s\n", yytext); SAVE_TOKEN; return IDENTIFIER;} // identifier
+{ emptyLine=0; printf("Identifier: %s\n", yytext); SAVE_TOKEN; return Identifier;} // identifier
 	YY_BREAK
 case 44:
 YY_RULE_SETUP

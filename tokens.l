@@ -71,8 +71,8 @@ true                        { emptyLine=0; printf("BoolTrue\n"); SAVE_TOKEN; ret
 false                       { emptyLine=0; printf("BoolFalse\n"); SAVE_TOKEN;return BoolFalse;}  // literal bool
 [\"].*[\"]                  { emptyLine=0; printf("String\n"); SAVE_TOKEN; return String;}  // literal string
 {digit}+.{digit}+           { emptyLine=0; printf("Float\n"); SAVE_TOKEN; return Float;}  // literal float
-{digit}+.?                  { emptyLine=0; printf("Int\n"); SAVE_TOKEN; return INT;}    // literal int
-{alpha}({alpha}|{digit}|_)* { emptyLine=0; printf("Identifier: %s\n", yytext); SAVE_TOKEN; return IDENTIFIER;} // identifier
+{digit}+.?                  { emptyLine=0; printf("Int\n"); SAVE_TOKEN; return Int;}    // literal int
+{alpha}({alpha}|{digit}|_)* { emptyLine=0; printf("Identifier: %s\n", yytext); SAVE_TOKEN; return Identifier;} // identifier
 
 \/\/.* ;
 \/\*(.*)*                 { emptyLine=0; printf("MultiCommentBegin\n"); SAVE_TOKEN; return MultiCommentBegin;}

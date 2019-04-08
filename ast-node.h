@@ -1,109 +1,101 @@
 #include <iostream>
 #include <vector>
 
-class Expression
-{
+class NStatement;
+class NExpression;
+class NVariableDeclaration;
+
+typedef std::vector<NStatement*> StatementList;
+typedef std::vector<NExpression*> ExpressionList;
+typedef std::vector<NVariableDeclaration*> VariableList;
+
+class Node {
     public:
-    
+        virtual ~Node() {}
 };
 
-class Statement
-{
-
+class NExpression : public Node {
 };
 
-class Integer
-{   
+class NStatement : public Node {
+};
+
+class NInteger: public NExpression {
     public:
-    long long int value;
-
-    Integer(long long int value) : value(value) { }
+        long long int value;
+        NInteger(long long int value): value(value) { }
 };
 
-class Float
-{
+class NFloat: public NExpression {
     public:
-    double value;
-
-    Float(double value): value(value) {}
+        double value;
+        NFloat(double value): value(value) { }
 };
 
-class String
-{
+class NString: public NExpression {
     public:
-    std::string value;
-
-    String(std::string& value): value(value) {}
+        std::string value;
+        NString(std::string &value): value(value) {}
 };
 
-class Identifier
-{
+class NBool: public NExpression {
     public:
-    std::string name;
-
-    Identifier(std::string& name): name(name) {}
+        char value;
+        NBool(char value): value(value) {}
 };
 
-class BinOp
-{
+class NIdentifier: public NExpression {
     public:
-    // enum op {
-    //     EqualEqual, NotEqual, 
-    //     BitAnd, BitOr, BitXor,
-    //     CoAnd, CoOr, 
-    //     ChanIn, ChanOut,
-    //     Greater, GreaterEqual, Lesser, LesserEqual,
-    //     Plus, Minus, Multiply, Divide
-    // };
-    
-    int oper;
-
-    Expression &op1, &op2;
-
-    BinOp(Expression &op1, int oper, Expression &op2):
-        op1(op1), op2(op2), oper(oper) {}
-     
+        std::string name;
+        NIdentifier(std::string &name): name(name) { }
 };
 
-class Assignment
-{
+class NBinOp: public NExpression {
     public:
+        // enum type {
+        //     BPlus, BMinus, BMulti, BDivid,
+        //     BEqualEqual, BNotEqual,
+        //     BBitAnd, BBitOr, BBitXor,
+        //     BCoAnd, BCoOor,
+        //     BChanIn, BChanOut,
+        //     BGreT, BGretEq,
+        //     BLesT, BLesTEq,
+        // };
 
-    Identifier &lhs;
-    Expression &rhs;
-
-    Assignment(Identifier &lhs, Expression &rhs): 
-        lhs(lhs), rhs(rhs) {}
+        int type;
+        NExpression &op1, &op2;
+        NBinOp(NExpression &op1, int type, NExpression &op2): 
+            type(type), op1(op1), op2(op2) { }
 };
 
-class Block
-{
+class NAssign: public NExpression {
     public:
-    std::vector <Statement *> statements;
+        NIdentifier &lhs;
+        NExpression &rhs;
+
+        NAssign(NIdentifier &lhs, NExpression &rhs): lhs(lhs), rhs(rhs) { }
 };
 
-class VarDecl
-{
-    public:
-    int type;
-    Identifier &id;
-    Expression &rhs;
-
-    VarDecl(int type, Identifier &id, Expression &rhs):
-        type(type), id(id), rhs(rhs) {}
+class NBlock : public NExpression {
+public:
+    StatementList statements;
+    NBlock() { }
 };
 
-class ProgBloc
-{   
-    public:
-    std::string packageName;
-
-    std::vector <std::string> imports;
-
-    Block &mainBloc;
-
-    ProgBloc(std::string &packageName, std::vector <std::string> &imports, Block &block):
-        packageName(packageName), imports(imports), mainBloc(block) {}
-
+class NExpressionStatement : public NStatement {
+public:
+    NExpression &expression;
+    NExpressionStatement(NExpression &expression) : 
+        expression(expression) { }
 };
 
+class NVariableDeclaration : public NStatement {
+public:
+    const NIdentifier &type;
+    NIdentifier &id;
+    NExpression *assignmentExpr;
+    NVariableDeclaration(const NIdentifier& type, NIdentifier& id) :
+        type(type), id(id) { }
+    NVariableDeclaration(const NIdentifier &type, NIdentifier &id, NExpression *assignmentExpr) :
+        type(type), id(id), assignmentExpr(assignmentExpr) { }
+};
