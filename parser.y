@@ -29,6 +29,7 @@
 %union {
     Node *node;
     NStatement *stmt;
+    StatementList *gDeclLst;
     std::string *string;
     NExpression *expr;
     int token;
@@ -37,6 +38,7 @@
 // %type <string> Literal
 %type <expr> Literal
 %type <stmt> VariableDecla
+%type <gDeclLst> Declaration
 
 %left TPLUS TMINUS
 %left TMUL TDIV
@@ -57,25 +59,33 @@ PackageDefinition:
     ;
 
 // Import
- Imports:
-     SingleImports TKIMPORT String TTERM
-     ;
+Imports:
+    SingleImports TKIMPORT String TTERM
+    ;
 
- SingleImports:
-     SingleImports TKIMPORT String TTERM
-     |
-     ;
+SingleImports:
+    SingleImports TKIMPORT String TTERM
+    |
+    ;
 
 // Declaration
 Declaration:
-    Declaration VariableDecla
-    |
+    VariableDecla Declaration { 
+        cout<<"VarDecls"<<endl;
+        $2->push_back($<stmt>1);
+    }
+    | { 
+        NStatement *simply = new NStatement();
+        $$ = new StatementList();
+        // $$->push_back(simply); 
+        cout<<"DeclEnd"<<endl; 
+    }
     ;
 
 VariableDecla:
     TKVAR Identifier TEQUAL Literal TTERM {
         string *typeS;
-        cout<<"VarDeclTrial2type:"<<$4->typeOf()<<endl;
+        // cout<<"VarDeclTrial2type:"<<$4->typeOf()<<endl;
         switch($4->typeOf()) {
             case 'u': typeS = new std::string("unk"); break;
             case 'i': typeS = new std::string("int"); break;
@@ -91,7 +101,7 @@ VariableDecla:
     }
     | Identifier TSEQUAL Literal TTERM {
         string *typeS;
-        cout<<"VarDeclTrial2type:"<<$3->typeOf()<<endl;
+        // cout<<"VarDeclTrial2type:"<<$3->typeOf()<<endl;
         switch($3->typeOf()) {
             case 'u': typeS = new std::string("unk"); break;
             case 'i': typeS = new std::string("int"); break;
@@ -147,7 +157,8 @@ CompoundBloc:
 //    | If StatementList
 //    ;
 StatementList:
-    Declaration Statementdash
+    VariableDecla 
+    | Statementdash
     ;
 
 Statementdash:
