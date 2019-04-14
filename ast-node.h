@@ -15,6 +15,10 @@ class Node {
 };
 
 class NExpression : public Node {
+    public:
+        virtual char typeOf() {
+            return 'u';
+        };
 };
 
 class NStatement : public Node {
@@ -24,24 +28,40 @@ class NInteger: public NExpression {
     public:
         long long int value;
         NInteger(long long int value): value(value) { }
+        
+        virtual char typeOf() {
+            return 'i';
+        }
 };
 
 class NFloat: public NExpression {
     public:
         double value;
         NFloat(double value): value(value) { }
+        
+        virtual char typeOf() {
+            return 'f';
+        }
 };
 
 class NString: public NExpression {
     public:
         std::string value;
         NString(std::string &value): value(value) {}
+
+        virtual char typeOf() {
+            return 's';
+        }
 };
 
 class NBool: public NExpression {
     public:
         char value;
         NBool(char value): value(value) {}
+
+        virtual char typeOf() {
+            return 'b';
+        }
 };
 
 class NIdentifier: public NExpression {

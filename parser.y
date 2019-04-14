@@ -23,16 +23,20 @@
 %token <token> TPLUS TMINUS TMUL TDIV
 %token <token> TKFOR TKIF TKFUNC TKIMPORT TKMAIN TKPACKAGE TKVAR TKELSE
 %token <token> TDINT TDFLOAT TDBOOL TDSTRING
-%token <token> BoolTrue BoolFalse String Float Int MultiCommentBegin MultiCommentEnd Identifier
+%token <string> BoolTrue BoolFalse String Float Int MultiCommentBegin MultiCommentEnd Identifier
 %token <token> TTERM
 
 %union {
     Node *node;
+    NStatement *stmt;
     std::string *string;
+    NExpression *expr;
     int token;
 }
 
-%type <string> Literal
+// %type <string> Literal
+%type <expr> Literal
+%type <stmt> VariableDecla
 
 %left TPLUS TMINUS
 %left TMUL TDIV
@@ -70,30 +74,59 @@ Declaration:
 
 VariableDecla:
     TKVAR Identifier TEQUAL Literal TTERM {
-        cout<<"VarDeclTrial:"<<$2<<endl;
+        string *typeS;
+        cout<<"VarDeclTrial2type:"<<$4->typeOf()<<endl;
+        switch($4->typeOf()) {
+            case 'u': typeS = new std::string("unk"); break;
+            case 'i': typeS = new std::string("int"); break;
+            case 'f': typeS = new std::string("float"); break;
+            case 's': typeS = new std::string("string"); break;
+            case 'b': typeS = new std::string("bool"); break;
+        }
+        
+        NIdentifier *typE = new NIdentifier(*typeS);
+        NIdentifier *id = new NIdentifier(*$2);
+        delete $2;
+        $$ = new NVariableDeclaration(*typE, *id, $4);
     }
     | Identifier TSEQUAL Literal TTERM {
-        // string s = $3;
-        cout<<"VarDeclTrial:"<<*$3<<endl;
+        string *typeS;
+        cout<<"VarDeclTrial2type:"<<$3->typeOf()<<endl;
+        switch($3->typeOf()) {
+            case 'u': typeS = new std::string("unk"); break;
+            case 'i': typeS = new std::string("int"); break;
+            case 'f': typeS = new std::string("float"); break;
+            case 's': typeS = new std::string("string"); break;
+            case 'b': typeS = new std::string("bool"); break;
+        }
+        
+        NIdentifier *typE = new NIdentifier(*typeS);
+        NIdentifier *id = new NIdentifier(*$1);
+        delete $1;
+        $$ = new NVariableDeclaration(*typE, *id, $3);
     }
     ;
 
 Literal:
     BoolTrue {
-        $$ = new string("hello");
-        cout<<"literal:"<<$1;
+        $$ = new NBool('T');
     }
     | BoolFalse {
-        $$ = new string("hello");
+        $$ = new NBool('T');
     }
     | String {
-        $$ = new string("hello");
+        cout<<*$1<<endl;
+        $$ = new NString(*$1);
     }
     | Float {
-        $$ = new string("hello");
+        double fl = atof($1->c_str());
+        $$ = new NFloat(fl);
+        cout<<fl<<endl;
     }
     | Int {
-        $$ = new string("hello");
+        long long int v = atoi($1->c_str());
+        $$ = new NInteger(v);
+        cout<<v<<endl;
     }
     ;
 
