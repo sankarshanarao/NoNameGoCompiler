@@ -7,22 +7,22 @@ var c = 5
 b := 8
 
 func main(){
-	if(a<b){
+	if a<b{
 		var a = 5
 		var c = 5
 		b := 8
-				if(a<b){
+				if ba<b {
 				var a = 5
 				var c = 5
 				b := 8
 			}
-			else if(a<b){
+			else if a<b {
 				var a = 5
 				var c = 5
 				b := 8
 			}
 	}
-	else if(a<b){
+	else if a<b {
 			var a = 5
 			var c = 5
 			b := 8

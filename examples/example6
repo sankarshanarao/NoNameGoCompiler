@@ -7,7 +7,7 @@ var c = 5
 b := 8
 
 func main(){
-	if(){
+	if e>2 {
 		var a = 5
 		var c = 5
 		b := 8

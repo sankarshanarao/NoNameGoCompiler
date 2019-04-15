@@ -156,23 +156,24 @@ CompoundBloc:
 //    Declaration Statementdash
 //    | If StatementList
 //    ;
-StatementList:
-    VariableDecla 
-    | Statementdash
+
+StatementList: 
+    | Statementdash 
+    | StatementList Statementdash 
     ;
 
 Statementdash:
-    If Statementdash
-    | For Statementdash
-    |
+    If 
+    | For 
+    | VariableDecla
     ;
 
 If:
-    TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc
+    TKIF ConditionalStatement CompoundBloc
     Else
     ;
 Else:
-    TKELSE TKIF TLPAREN ConditionalStatement TRPAREN CompoundBloc Else
+    TKELSE If
     | TKELSE CompoundBloc
     |
     ;
