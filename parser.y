@@ -40,8 +40,8 @@
 
 // %type <string> Literal
 %type <expr> Literal
-%type <stmt> VariableDecla
-
+%type <stmt> VariableDecla Statementdash
+%type <block> StatementList CompoundBloc
 
 %left TPLUS TMINUS
 %left TMUL TDIV
@@ -135,18 +135,18 @@ Literal:
         $$ = new NBool('T');
     }
     | String {
-        cout<<*$1<<endl;
+        // cout<<*$1<<endl;
         $$ = new NString(*$1);
     }
     | Float {
         double fl = atof($1->c_str());
         $$ = new NFloat(fl);
-        cout<<fl<<endl;
+        // cout<<fl<<endl;
     }
     | Int {
         long long int v = atoi($1->c_str());
         $$ = new NInteger(v);
-        cout<<v<<endl;
+        // cout<<v<<endl;
     }
     ;
 
@@ -159,22 +159,32 @@ MainFunc:
 CompoundBloc:
     TLBRACE  TTERM
         StatementList
-    TRBRACE TTERM
+    TRBRACE TTERM {
+        $$ = $3;
+    }
+    | TLBRACE  TTERM
+      TRBRACE TTERM {
+          $$ = new NBlock();
+      }
     ;
 
-//StatementList:
-//    Declaration Statementdash
-//    | If StatementList
-//    ;
-
-StatementList: 
-    | Statementdash
-    | StatementList Statementdash
+StatementList:
+    Statementdash {
+        cout<<"\nStatementListDash\n";
+        $$ = new NBlock();
+        $$->statements.push_back($<stmt>1);
+        $<stmt>1->printJSON();
+        cout<<endl;
+        }
+    | StatementList Statementdash {
+        $1->statements.push_back($<stmt>2);
+        cout<<"\nStatementListDUB\n";
+        }
     ;
 
 Statementdash:
-    If 
-    | For 
+    If { $$ = new NStatement(); }
+    | For { $$ = new NStatement(); }
     | VariableDecla
     ;
 
