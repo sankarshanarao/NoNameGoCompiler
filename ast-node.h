@@ -8,6 +8,7 @@ class NVariableDeclaration;
 typedef std::vector<NStatement*> StatementList;
 typedef std::vector<NExpression*> ExpressionList;
 typedef std::vector<NVariableDeclaration*> VariableList;
+typedef std::vector<std::string> StringVec;
 
 class Node {
     public:
@@ -22,6 +23,10 @@ class NExpression : public Node {
 };
 
 class NStatement : public Node {
+    public:
+        virtual int printJSON() {
+            return 0;
+        };
 };
 
 class NInteger: public NExpression {
@@ -68,6 +73,11 @@ class NIdentifier: public NExpression {
     public:
         std::string name;
         NIdentifier(std::string &name): name(name) { }
+
+        virtual int printJSON() const{
+        std::cout<<name;
+        return 0;
+    }
 };
 
 class NBinOp: public NExpression {
@@ -118,4 +128,32 @@ public:
         type(type), id(id) { }
     NVariableDeclaration(const NIdentifier &type, NIdentifier &id, NExpression *assignmentExpr) :
         type(type), id(id), assignmentExpr(assignmentExpr) { }
+    
+    virtual int printJSON() {
+
+        std::cout<<"{\"opt\":\"varDecl\", \"type\":"<<"\"";
+        type.printJSON();
+        std::cout<<"\",";
+
+        std::cout<<"\"id\":"<<"\"";
+        id.printJSON();
+        std::cout<<"\"";
+
+        std::cout<<"}";
+        return 0;
+    }
+};
+
+class NGlobalBlock : public NBlock {
+    public:
+        std::string packageName;
+        std::vector<std::string> imports;
+        StatementList GlobDecl;
+        NBlock *mainBlock;
+
+        int printJSON() {
+            std::cout<<"{ \"package\": \""<<packageName<<"\","<<std::endl;
+
+            return 0;
+        }
 };

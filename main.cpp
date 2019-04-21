@@ -3,8 +3,11 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "ast-node.h"
 
 extern int yyparse();
+
+NGlobalBlock *progBlock;
 
 using namespace std;
 
@@ -39,6 +42,7 @@ int definedBefore(string varName) {
 
 int main(int argc, char **argv)
 {
+    progBlock = new NGlobalBlock();
     yyparse();
     // string name = "x";
 
@@ -50,5 +54,10 @@ int main(int argc, char **argv)
 
 
     // std::cout<<"Parsing Done"<<std::endl;
+
+    cout<<endl<<"==============="<<endl;
+
+    progBlock->printJSON();
+
     return 0;
 }

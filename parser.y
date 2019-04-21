@@ -13,6 +13,8 @@
     using namespace std;
     extern int insertSymbolTable(string s);
     extern int definedBefore(string s);
+
+    extern NGlobalBlock *progBlock;
 %}
 
 
@@ -28,6 +30,7 @@
 
 %union {
     Node *node;
+    NBlock *block;
     NStatement *stmt;
     StatementList *gDeclLst;
     std::string *string;
@@ -38,7 +41,7 @@
 // %type <string> Literal
 %type <expr> Literal
 %type <stmt> VariableDecla
-%type <gDeclLst> Declaration
+
 
 %left TPLUS TMINUS
 %left TMUL TDIV
@@ -54,8 +57,14 @@ program:
 
 // Package
 PackageDefinition:
-    TKPACKAGE TKMAIN TTERM
-    | TKPACKAGE Identifier TTERM
+    TKPACKAGE TKMAIN TTERM {
+        progBlock->packageName = "main";
+        cout<<"import:main"<<endl;
+    }
+    | TKPACKAGE Identifier TTERM {
+        cout<<"import:"<<*$2<<endl;
+        progBlock->packageName = *$2;
+    }
     ;
 
 // Import
@@ -64,21 +73,20 @@ Imports:
     ;
 
 SingleImports:
-    SingleImports TKIMPORT String TTERM
+    SingleImports TKIMPORT String TTERM 
     |
     ;
 
 // Declaration
 Declaration:
     VariableDecla Declaration { 
-        cout<<"VarDecls"<<endl;
-        $2->push_back($<stmt>1);
+        progBlock->GlobDecl.push_back($<stmt>1);
+        cout<<"VarDecl:"<<progBlock->GlobDecl.size()<<endl;
     }
     | { 
         NStatement *simply = new NStatement();
-        $$ = new StatementList();
         // $$->push_back(simply); 
-        cout<<"DeclEnd"<<endl; 
+        cout<<"DeclEnd"<<endl;
     }
     ;
 
@@ -98,6 +106,7 @@ VariableDecla:
         NIdentifier *id = new NIdentifier(*$2);
         delete $2;
         $$ = new NVariableDeclaration(*typE, *id, $4);
+        // cout<<$$->printJSON();
     }
     | Identifier TSEQUAL Literal TTERM {
         string *typeS;
@@ -114,6 +123,7 @@ VariableDecla:
         NIdentifier *id = new NIdentifier(*$1);
         delete $1;
         $$ = new NVariableDeclaration(*typE, *id, $3);
+        // cout<<$$->printJSON();
     }
     ;
 
@@ -158,8 +168,8 @@ CompoundBloc:
 //    ;
 
 StatementList: 
-    | Statementdash 
-    | StatementList Statementdash 
+    | Statementdash
+    | StatementList Statementdash
     ;
 
 Statementdash:
