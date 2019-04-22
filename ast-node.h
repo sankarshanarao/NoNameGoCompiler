@@ -20,6 +20,11 @@ class NExpression : public Node {
         virtual char typeOf() {
             return 'u';
         };
+
+        virtual int printJSON() const{
+
+            return 0;
+        }
 };
 
 class NStatement : public Node {
@@ -36,6 +41,17 @@ class NInteger: public NExpression {
         
         virtual char typeOf() {
             return 'i';
+        }
+
+        virtual int printJSON() const {
+            std::cout<<"{\"opt\":\"literal\", \"type\":\"Int\",";
+
+            std::cout<<"\"value\":";
+
+            std::cout<<value;
+
+            std::cout<<"}";
+            return 0;
         }
 };
 
@@ -74,10 +90,16 @@ class NIdentifier: public NExpression {
         std::string name;
         NIdentifier(std::string &name): name(name) { }
 
-        virtual int printJSON() const{
-        std::cout<<name;
-        return 0;
-    }
+        virtual int printJSON() const {
+            std::cout<<"{\"opt\":\"identi\",";
+
+            std::cout<<"\"name\":\"";
+            std::cout<<name;
+            std::cout<<"\"}";
+
+
+            return 0;
+        }
 };
 
 class NBinOp: public NExpression {
@@ -96,6 +118,23 @@ class NBinOp: public NExpression {
         NExpression &op1, &op2;
         NBinOp(NExpression &op1, int type, NExpression &op2): 
             type(type), op1(op1), op2(op2) { }
+
+        virtual int printJSON() const {
+            std::cout<<"{\"opt\":\"binOp\", \"type\":";
+
+            std::cout<<type;
+
+            std::cout<<",\"op1\":";
+
+            op1.printJSON();
+
+            std::cout<<",\"op2\":";
+
+            op2.printJSON();
+            
+            std::cout<<"}";
+            return 0;
+        }
 };
 
 
@@ -106,8 +145,16 @@ class NAssign: public NExpression {
 
         NAssign(NIdentifier &lhs, NExpression &rhs): lhs(lhs), rhs(rhs) { }
 
-        virtual int printJSON() {
-        
+        virtual int printJSON() const {
+            std::cout<<"{\"opt\":\"assign\",";
+
+            std::cout<<"\"target\":";
+            lhs.printJSON();
+            std::cout<<",\"rhs\":";
+
+            rhs.printJSON();
+
+            std::cout<<"}";
             return 0;
         }
 };
@@ -143,7 +190,13 @@ public:
     NExpression &expression;
     NExpressionStatement(NExpression &expression) : 
         expression(expression) { }
+
+    virtual int printJSON() {
+        expression.printJSON();
+        return 0;
+    }
 };
+
 
 class NVariableDeclaration : public NStatement {
 public:
@@ -157,13 +210,12 @@ public:
     
     virtual int printJSON() {
 
-        std::cout<<"{\"opt\":\"varDeclState\", \"type\":"<<"\"";
+        std::cout<<"{\"opt\":\"varDeclState\", \"type\":";
         type.printJSON();
-        std::cout<<"\",";
+        std::cout<<",";
 
-        std::cout<<"\"id\":"<<"\"";
+        std::cout<<"\"id\":";
         id.printJSON();
-        std::cout<<"\"";
 
         std::cout<<"}";
         return 0;

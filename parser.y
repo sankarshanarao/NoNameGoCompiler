@@ -7,7 +7,7 @@
     extern int yylex();
     extern int insertSymbolTable(std::string);
     void yyerror(const char *s) {
-    printf("LINE :%d ERROR:%s\n", linenumber, s); 
+        printf("LINE :%d ERROR:%s\n", linenumber, s); 
     }
 
     using namespace std;
@@ -16,7 +16,6 @@
 
     extern NGlobalBlock *progBlock;
 %}
-
 
 
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
@@ -28,6 +27,7 @@
 %token <string> BoolTrue BoolFalse String Float Int MultiCommentBegin MultiCommentEnd Identifier
 %token <token> TTERM
 
+%error-verbose
 %union {
     Node *node;
     NBlock *block;
@@ -192,7 +192,13 @@ StatementList:
 
 Statementdash:
     VariableDecla
-    | Expression { $$ = new NExpressionStatement(*$1); }
+    | Expression TTERM {
+        // cout<<"\nExpressionStatement\n";
+        $$ = new NExpressionStatement(*$1);
+        
+        // $$->printJSON();
+        cout<<endl;
+        }
     ;
 
 BinaryOperators:
@@ -206,17 +212,31 @@ BinaryOperators:
 
 Expression:
     Identifier TEQUAL Expression {
-        cout<<"Id"<<*$1;
+        cout<<"Id:"<<*$1<<endl;
         NIdentifier *id = new NIdentifier(*$1);
-        $$ = new NAssign(*id, *$3);
-
-        cout<<"AssignDOne\n";
+        $$ = new NAssign(*id, *$<expr>3);
+        // $$->printJSON();
+        cout<<"\nAssignDone\n";
         }
-    | Identifier { $$ = new NIdentifier(*$1); delete $1;}
-    | Literal
+    | Identifier {
+            NExpression *e = new NIdentifier(*$1);
+            cout<<"InsideIdentExp:";
+            e->printJSON();
+            cout<<endl;
+            $$ = new NIdentifier(*$1);
+        }
+    | Literal {
+        $$ = $1;
+        cout<<"Literal\n";
+        // $$->printJSON();
+        cout<<endl;
+    }
     | Expression BinaryOperators Expression { 
         $$ = new NBinOp(*$1, $2, *$3);
         cout<<"\nBinOps"<<$2<<endl;
         }
-    | TLPAREN Expression TRPAREN
+    | TLPAREN Expression TRPAREN {
+        $$ = $2;
+      }
+    ;
 %%

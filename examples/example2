@@ -21,6 +21,6 @@ func main() {
     n := 2
     var k = "world"
 
-    m = 1
+    m = b
 }
 

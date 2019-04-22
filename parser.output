@@ -20,8 +20,8 @@ Terminals which are not used
    MultiCommentEnd
 
 
-State 72 conflicts: 15 shift/reduce
-State 74 conflicts: 15 shift/reduce
+State 73 conflicts: 15 shift/reduce
+State 75 conflicts: 15 shift/reduce
 
 
 Grammar
@@ -60,7 +60,7 @@ Grammar
    21              | StatementList Statementdash
 
    22 Statementdash: VariableDecla
-   23              | Expression
+   23              | Expression TTERM
 
    24 BinaryOperators: TCEQ
    25                | TCNE
@@ -139,7 +139,7 @@ Int (304) 16
 MultiCommentBegin (305)
 MultiCommentEnd (306)
 Identifier (307) 4 10 11 39 40
-TTERM (308) 3 4 5 6 10 11 18 19
+TTERM (308) 3 4 5 6 10 11 18 19 23
 
 
 Nonterminals, with rules where they appear
@@ -553,7 +553,7 @@ state 40
    20 StatementList: . Statementdash
    21              | . StatementList Statementdash
    22 Statementdash: . VariableDecla
-   23              | . Expression
+   23              | . Expression TTERM
    39 Expression: . Identifier TEQUAL Expression
    40           | . Identifier
    41           | . Literal
@@ -614,7 +614,7 @@ state 43
 
    11 VariableDecla: Identifier . TSEQUAL Literal TTERM
    39 Expression: Identifier . TEQUAL Expression
-   40           | Identifier .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   40           | Identifier .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TPLUS, TMINUS, TMUL, TDIV, TTERM]
 
     TEQUAL   shift, and go to state 52
     TSEQUAL  shift, and go to state 16
@@ -648,7 +648,7 @@ state 46
    18 CompoundBloc: TLBRACE TTERM StatementList . TRBRACE TTERM
    21 StatementList: StatementList . Statementdash
    22 Statementdash: . VariableDecla
-   23              | . Expression
+   23              | . Expression TTERM
    39 Expression: . Identifier TEQUAL Expression
    40           | . Identifier
    41           | . Literal
@@ -680,7 +680,7 @@ state 47
 
 state 48
 
-   23 Statementdash: Expression .  [TLPAREN, TRBRACE, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   23 Statementdash: Expression . TTERM
    24 BinaryOperators: . TCEQ
    25                | . TCNE
    26                | . TBAND
@@ -713,16 +713,15 @@ state 48
     TMINUS  shift, and go to state 67
     TMUL    shift, and go to state 68
     TDIV    shift, and go to state 69
+    TTERM   shift, and go to state 70
 
-    $default  reduce using rule 23 (Statementdash)
-
-    BinaryOperators  go to state 70
+    BinaryOperators  go to state 71
 
 
 state 49
 
    39 Expression: Identifier . TEQUAL Expression
-   40           | Identifier .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   40           | Identifier .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TRPAREN, TPLUS, TMINUS, TMUL, TDIV, TTERM]
 
     TEQUAL  shift, and go to state 52
 
@@ -760,13 +759,13 @@ state 50
     TBXOR    shift, and go to state 63
     TAND     shift, and go to state 64
     TOR      shift, and go to state 65
-    TRPAREN  shift, and go to state 71
+    TRPAREN  shift, and go to state 72
     TPLUS    shift, and go to state 66
     TMINUS   shift, and go to state 67
     TMUL     shift, and go to state 68
     TDIV     shift, and go to state 69
 
-    BinaryOperators  go to state 70
+    BinaryOperators  go to state 71
 
 
 state 51
@@ -799,14 +798,14 @@ state 52
     Identifier  shift, and go to state 49
 
     Literal     go to state 45
-    Expression  go to state 72
+    Expression  go to state 73
 
 
 state 53
 
    18 CompoundBloc: TLBRACE TTERM StatementList TRBRACE . TTERM
 
-    TTERM  shift, and go to state 73
+    TTERM  shift, and go to state 74
 
 
 state 54
@@ -923,6 +922,13 @@ state 69
 
 state 70
 
+   23 Statementdash: Expression TTERM .
+
+    $default  reduce using rule 23 (Statementdash)
+
+
+state 71
+
    12 Literal: . BoolTrue
    13        | . BoolFalse
    14        | . String
@@ -944,17 +950,17 @@ state 70
     Identifier  shift, and go to state 49
 
     Literal     go to state 45
-    Expression  go to state 74
+    Expression  go to state 75
 
 
-state 71
+state 72
 
    43 Expression: TLPAREN Expression TRPAREN .
 
     $default  reduce using rule 43 (Expression)
 
 
-state 72
+state 73
 
    24 BinaryOperators: . TCEQ
    25                | . TCNE
@@ -971,7 +977,7 @@ state 72
    36                | . TPLUS
    37                | . TMUL
    38                | . TDIV
-   39 Expression: Identifier TEQUAL Expression .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   39 Expression: Identifier TEQUAL Expression .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TRPAREN, TPLUS, TMINUS, TMUL, TDIV, TTERM]
    42           | Expression . BinaryOperators Expression
 
     TCEQ    shift, and go to state 55
@@ -1007,17 +1013,17 @@ state 72
     TDIV      [reduce using rule 39 (Expression)]
     $default  reduce using rule 39 (Expression)
 
-    BinaryOperators  go to state 70
+    BinaryOperators  go to state 71
 
 
-state 73
+state 74
 
    18 CompoundBloc: TLBRACE TTERM StatementList TRBRACE TTERM .
 
     $default  reduce using rule 18 (CompoundBloc)
 
 
-state 74
+state 75
 
    24 BinaryOperators: . TCEQ
    25                | . TCNE
@@ -1034,8 +1040,8 @@ state 74
    36                | . TPLUS
    37                | . TMUL
    38                | . TDIV
-   42 Expression: Expression . BinaryOperators Expression  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
-   42           | Expression BinaryOperators Expression .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   42 Expression: Expression . BinaryOperators Expression  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TRPAREN, TPLUS, TMINUS, TMUL, TDIV, TTERM]
+   42           | Expression BinaryOperators Expression .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TRPAREN, TPLUS, TMINUS, TMUL, TDIV, TTERM]
 
     TCEQ    shift, and go to state 55
     TCNE    shift, and go to state 56
@@ -1070,4 +1076,4 @@ state 74
     TDIV      [reduce using rule 42 (Expression)]
     $default  reduce using rule 42 (Expression)
 
-    BinaryOperators  go to state 70
+    BinaryOperators  go to state 71
