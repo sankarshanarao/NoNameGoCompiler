@@ -32,16 +32,18 @@
     Node *node;
     NBlock *block;
     NStatement *stmt;
+    NExpression *expr;
     StatementList *gDeclLst;
     std::string *string;
-    NExpression *expr;
     int token;
 }
 
 // %type <string> Literal
 %type <expr> Literal
 %type <stmt> VariableDecla Statementdash
-%type <block> StatementList CompoundBloc
+%type <block> StatementList CompoundBloc MainFunc
+%type <expr> Expression
+%type <token> BinaryOperators
 
 %left TPLUS TMINUS
 %left TMUL TDIV
@@ -51,8 +53,12 @@
 %%
 
 program:
-    PackageDefinition Imports Declaration MainFunc
-    | PackageDefinition Declaration MainFunc
+    PackageDefinition Imports Declaration MainFunc {
+        progBlock->mainBlock = $<block>4;
+    }
+    | PackageDefinition Declaration MainFunc {
+        progBlock->mainBlock = $<block>3;
+    }
     ;
 
 // Package
@@ -152,7 +158,7 @@ Literal:
 
 MainFunc:
     TKFUNC TKMAIN TLPAREN TRPAREN CompoundBloc {
-        std::cout<<"MainFunction"<<std::endl;
+        $$ = $5;
     }
     ;
 
@@ -161,6 +167,8 @@ CompoundBloc:
         StatementList
     TRBRACE TTERM {
         $$ = $3;
+        // $$->printJSON();
+        // cout<<endl;
     }
     | TLBRACE  TTERM
       TRBRACE TTERM {
@@ -170,68 +178,45 @@ CompoundBloc:
 
 StatementList:
     Statementdash {
-        cout<<"\nStatementListDash\n";
+        // cout<<"\nStatementListDash\n";
         $$ = new NBlock();
         $$->statements.push_back($<stmt>1);
-        $<stmt>1->printJSON();
-        cout<<endl;
+        // $<stmt>1->printJSON();
+        // cout<<endl;
         }
     | StatementList Statementdash {
         $1->statements.push_back($<stmt>2);
-        cout<<"\nStatementListDUB\n";
+        // cout<<"\nStatementListDUB\n";
         }
     ;
 
 Statementdash:
-    If { $$ = new NStatement(); }
-    | For { $$ = new NStatement(); }
-    | VariableDecla
+    VariableDecla
+    | Expression { $$ = new NExpressionStatement(*$1); }
     ;
 
-If:
-    TKIF ConditionalStatement CompoundBloc
-    Else
-    ;
-Else:
-    TKELSE If
-    | TKELSE CompoundBloc
-    |
-    ;
-
-For:
-    TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
-    | TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
-    | TKFOR Declaration CompoundBloc
-    ;
-
-ConditionalStatement:
-    Operand ConditionalOperator Operand
-    ;
-ConditionalOperator:
+BinaryOperators:
     TCEQ | TCNE | TBAND | TBOR | TBXOR | TAND | TOR
-    | TCLE | TCLT | TCGT | TCGE | TNEG
-    ;
-Operand:
-    Int | Float | Identifier
-    ;
-
-IterativeStatement: 
-    AssignmentStatement;
-
-AssignmentStatement: 
-    Identifier TEQUAL ArithmeticStatement;
-
-ArithmeticStatement: 
-    Identifier ArithOper Identifier
-    | Identifier ArithOper Literal
-    | Literal ArithOper Identifier
-    | Literal ArithOper Literal
-    ;
-
-ArithOper: 
-    TMINUS
+    | TCLE | TCLT | TCGT | TCGE 
+    | TMINUS
     | TPLUS
     | TMUL
     | TDIV
     ;
+
+Expression:
+    Identifier TEQUAL Expression {
+        cout<<"Id"<<*$1;
+        NIdentifier *id = new NIdentifier(*$1);
+        $$ = new NAssign(*id, *$3);
+
+        cout<<"AssignDOne\n";
+        }
+    | Identifier { $$ = new NIdentifier(*$1); delete $1;}
+    | Literal
+    | Expression BinaryOperators Expression { 
+        $$ = new NBinOp(*$1, $2, *$3);
+        cout<<"\nBinOps"<<$2<<endl;
+        }
+    | TLPAREN Expression TRPAREN
 %%

@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 
     cout<<endl<<"==============="<<endl;
 
-    progBlock->printJSON();
+    // progBlock->printJSON();
 
     return 0;
 }

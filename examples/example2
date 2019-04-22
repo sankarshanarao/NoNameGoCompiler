@@ -20,5 +20,7 @@ func main() {
     var m = 1
     n := 2
     var k = "world"
+
+    m = 1
 }
 

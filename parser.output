@@ -3,16 +3,25 @@ Terminals which are not used
    TIDENTIFIER
    TINTEGER
    TDOUBLE
+   TNEG
    TLCHAN
    TRCHAN
    TCOMMA
    TDOT
+   TSEMI
+   TKFOR
+   TKIF
+   TKELSE
    TDINT
    TDFLOAT
    TDBOOL
    TDSTRING
    MultiCommentBegin
    MultiCommentEnd
+
+
+State 72 conflicts: 15 shift/reduce
+State 74 conflicts: 15 shift/reduce
 
 
 Grammar
@@ -50,52 +59,30 @@ Grammar
    20 StatementList: Statementdash
    21              | StatementList Statementdash
 
-   22 Statementdash: If
-   23              | For
-   24              | VariableDecla
+   22 Statementdash: VariableDecla
+   23              | Expression
 
-   25 If: TKIF ConditionalStatement CompoundBloc Else
+   24 BinaryOperators: TCEQ
+   25                | TCNE
+   26                | TBAND
+   27                | TBOR
+   28                | TBXOR
+   29                | TAND
+   30                | TOR
+   31                | TCLE
+   32                | TCLT
+   33                | TCGT
+   34                | TCGE
+   35                | TMINUS
+   36                | TPLUS
+   37                | TMUL
+   38                | TDIV
 
-   26 Else: TKELSE If
-   27     | TKELSE CompoundBloc
-   28     | /* empty */
-
-   29 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
-   30    | TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
-   31    | TKFOR Declaration CompoundBloc
-
-   32 ConditionalStatement: Operand ConditionalOperator Operand
-
-   33 ConditionalOperator: TCEQ
-   34                    | TCNE
-   35                    | TBAND
-   36                    | TBOR
-   37                    | TBXOR
-   38                    | TAND
-   39                    | TOR
-   40                    | TCLE
-   41                    | TCLT
-   42                    | TCGT
-   43                    | TCGE
-   44                    | TNEG
-
-   45 Operand: Int
-   46        | Float
-   47        | Identifier
-
-   48 IterativeStatement: AssignmentStatement
-
-   49 AssignmentStatement: Identifier TEQUAL ArithmeticStatement
-
-   50 ArithmeticStatement: Identifier ArithOper Identifier
-   51                    | Identifier ArithOper Literal
-   52                    | Literal ArithOper Identifier
-   53                    | Literal ArithOper Literal
-
-   54 ArithOper: TMINUS
-   55          | TPLUS
-   56          | TMUL
-   57          | TDIV
+   39 Expression: Identifier TEQUAL Expression
+   40           | Identifier
+   41           | Literal
+   42           | Expression BinaryOperators Expression
+   43           | TLPAREN Expression TRPAREN
 
 
 Terminals, with rules where they appear
@@ -105,41 +92,41 @@ error (256)
 TIDENTIFIER (258)
 TINTEGER (259)
 TDOUBLE (260)
-TCEQ (261) 33
-TCNE (262) 34
-TCLT (263) 41
-TCLE (264) 40
-TCGT (265) 42
-TCGE (266) 43
-TEQUAL (267) 10 49
-TNEG (268) 44
-TBAND (269) 35
-TBOR (270) 36
-TBXOR (271) 37
-TAND (272) 38
-TOR (273) 39
+TCEQ (261) 24
+TCNE (262) 25
+TCLT (263) 32
+TCLE (264) 31
+TCGT (265) 33
+TCGE (266) 34
+TEQUAL (267) 10 39
+TNEG (268)
+TBAND (269) 26
+TBOR (270) 27
+TBXOR (271) 28
+TAND (272) 29
+TOR (273) 30
 TLCHAN (274)
 TRCHAN (275)
 TSEQUAL (276) 11
-TLPAREN (277) 17
-TRPAREN (278) 17
+TLPAREN (277) 17 43
+TRPAREN (278) 17 43
 TLBRACE (279) 18 19
 TRBRACE (280) 18 19
 TCOMMA (281)
 TDOT (282)
-TSEMI (283) 29 30
-TPLUS (284) 55
-TMINUS (285) 54
-TMUL (286) 56
-TDIV (287) 57
-TKFOR (288) 29 30 31
-TKIF (289) 25
+TSEMI (283)
+TPLUS (284) 36
+TMINUS (285) 35
+TMUL (286) 37
+TDIV (287) 38
+TKFOR (288)
+TKIF (289)
 TKFUNC (290) 17
 TKIMPORT (291) 5 6
 TKMAIN (292) 3 17
 TKPACKAGE (293) 3 4
 TKVAR (294) 10
-TKELSE (295) 26 27
+TKELSE (295)
 TDINT (296)
 TDFLOAT (297)
 TDBOOL (298)
@@ -147,11 +134,11 @@ TDSTRING (299)
 BoolTrue (300) 12
 BoolFalse (301) 13
 String (302) 5 6 14
-Float (303) 15 46
-Int (304) 16 45
+Float (303) 15
+Int (304) 16
 MultiCommentBegin (305)
 MultiCommentEnd (306)
-Identifier (307) 4 10 11 47 49 50 51 52
+Identifier (307) 4 10 11 39 40
 TTERM (308) 3 4 5 6 10 11 18 19
 
 
@@ -168,39 +155,24 @@ Imports (57)
 SingleImports (58)
     on left: 6 7, on right: 5 6
 Declaration (59)
-    on left: 8 9, on right: 1 2 8 29 30 31
+    on left: 8 9, on right: 1 2 8
 VariableDecla (60)
-    on left: 10 11, on right: 8 24
+    on left: 10 11, on right: 8 22
 Literal (61)
-    on left: 12 13 14 15 16, on right: 10 11 51 52 53
+    on left: 12 13 14 15 16, on right: 10 11 41
 MainFunc (62)
     on left: 17, on right: 1 2
 CompoundBloc (63)
-    on left: 18 19, on right: 17 25 27 29 30 31
+    on left: 18 19, on right: 17
 StatementList (64)
     on left: 20 21, on right: 18 21
 Statementdash (65)
-    on left: 22 23 24, on right: 20 21
-If (66)
-    on left: 25, on right: 22 26
-Else (67)
-    on left: 26 27 28, on right: 25
-For (68)
-    on left: 29 30 31, on right: 23
-ConditionalStatement (69)
-    on left: 32, on right: 25 29 30
-ConditionalOperator (70)
-    on left: 33 34 35 36 37 38 39 40 41 42 43 44, on right: 32
-Operand (71)
-    on left: 45 46 47, on right: 32
-IterativeStatement (72)
-    on left: 48, on right: 29
-AssignmentStatement (73)
-    on left: 49, on right: 48
-ArithmeticStatement (74)
-    on left: 50 51 52 53, on right: 49
-ArithOper (75)
-    on left: 54 55 56 57, on right: 50 51 52 53
+    on left: 22 23, on right: 20 21
+BinaryOperators (66)
+    on left: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38,
+    on right: 42
+Expression (67)
+    on left: 39 40 41 42 43, on right: 23 39 42 43
 
 
 state 0
@@ -331,7 +303,7 @@ state 12
 
     8 Declaration: . VariableDecla Declaration
     8            | VariableDecla . Declaration
-    9            | .  [TLBRACE, TSEMI, TKFUNC]
+    9            | .  [TKFUNC]
    10 VariableDecla: . TKVAR Identifier TEQUAL Literal TTERM
    11              | . Identifier TSEQUAL Literal TTERM
 
@@ -571,632 +543,531 @@ state 40
 
    10 VariableDecla: . TKVAR Identifier TEQUAL Literal TTERM
    11              | . Identifier TSEQUAL Literal TTERM
+   12 Literal: . BoolTrue
+   13        | . BoolFalse
+   14        | . String
+   15        | . Float
+   16        | . Int
    18 CompoundBloc: TLBRACE TTERM . StatementList TRBRACE TTERM
    19             | TLBRACE TTERM . TRBRACE TTERM
    20 StatementList: . Statementdash
    21              | . StatementList Statementdash
-   22 Statementdash: . If
-   23              | . For
-   24              | . VariableDecla
-   25 If: . TKIF ConditionalStatement CompoundBloc Else
-   29 For: . TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
-   30    | . TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
-   31    | . TKFOR Declaration CompoundBloc
+   22 Statementdash: . VariableDecla
+   23              | . Expression
+   39 Expression: . Identifier TEQUAL Expression
+   40           | . Identifier
+   41           | . Literal
+   42           | . Expression BinaryOperators Expression
+   43           | . TLPAREN Expression TRPAREN
 
-    TRBRACE     shift, and go to state 41
-    TKFOR       shift, and go to state 42
-    TKIF        shift, and go to state 43
+    TLPAREN     shift, and go to state 41
+    TRBRACE     shift, and go to state 42
     TKVAR       shift, and go to state 7
-    Identifier  shift, and go to state 8
+    BoolTrue    shift, and go to state 23
+    BoolFalse   shift, and go to state 24
+    String      shift, and go to state 25
+    Float       shift, and go to state 26
+    Int         shift, and go to state 27
+    Identifier  shift, and go to state 43
 
     VariableDecla  go to state 44
-    StatementList  go to state 45
-    Statementdash  go to state 46
-    If             go to state 47
-    For            go to state 48
+    Literal        go to state 45
+    StatementList  go to state 46
+    Statementdash  go to state 47
+    Expression     go to state 48
 
 
 state 41
 
-   19 CompoundBloc: TLBRACE TTERM TRBRACE . TTERM
+   12 Literal: . BoolTrue
+   13        | . BoolFalse
+   14        | . String
+   15        | . Float
+   16        | . Int
+   39 Expression: . Identifier TEQUAL Expression
+   40           | . Identifier
+   41           | . Literal
+   42           | . Expression BinaryOperators Expression
+   43           | . TLPAREN Expression TRPAREN
+   43           | TLPAREN . Expression TRPAREN
 
-    TTERM  shift, and go to state 49
+    TLPAREN     shift, and go to state 41
+    BoolTrue    shift, and go to state 23
+    BoolFalse   shift, and go to state 24
+    String      shift, and go to state 25
+    Float       shift, and go to state 26
+    Int         shift, and go to state 27
+    Identifier  shift, and go to state 49
+
+    Literal     go to state 45
+    Expression  go to state 50
 
 
 state 42
 
-    8 Declaration: . VariableDecla Declaration
-    9            | .  [TLBRACE, TSEMI]
-   10 VariableDecla: . TKVAR Identifier TEQUAL Literal TTERM
-   11              | . Identifier TSEQUAL Literal TTERM
-   29 For: TKFOR . Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
-   30    | TKFOR . Declaration TSEMI ConditionalStatement CompoundBloc
-   31    | TKFOR . Declaration CompoundBloc
+   19 CompoundBloc: TLBRACE TTERM TRBRACE . TTERM
 
-    TKVAR       shift, and go to state 7
-    Identifier  shift, and go to state 8
-
-    $default  reduce using rule 9 (Declaration)
-
-    Declaration    go to state 50
-    VariableDecla  go to state 12
+    TTERM  shift, and go to state 51
 
 
 state 43
 
-   25 If: TKIF . ConditionalStatement CompoundBloc Else
-   32 ConditionalStatement: . Operand ConditionalOperator Operand
-   45 Operand: . Int
-   46        | . Float
-   47        | . Identifier
+   11 VariableDecla: Identifier . TSEQUAL Literal TTERM
+   39 Expression: Identifier . TEQUAL Expression
+   40           | Identifier .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
 
-    Float       shift, and go to state 51
-    Int         shift, and go to state 52
-    Identifier  shift, and go to state 53
+    TEQUAL   shift, and go to state 52
+    TSEQUAL  shift, and go to state 16
 
-    ConditionalStatement  go to state 54
-    Operand               go to state 55
+    $default  reduce using rule 40 (Expression)
 
 
 state 44
 
-   24 Statementdash: VariableDecla .
+   22 Statementdash: VariableDecla .
 
-    $default  reduce using rule 24 (Statementdash)
+    $default  reduce using rule 22 (Statementdash)
 
 
 state 45
 
-   10 VariableDecla: . TKVAR Identifier TEQUAL Literal TTERM
-   11              | . Identifier TSEQUAL Literal TTERM
-   18 CompoundBloc: TLBRACE TTERM StatementList . TRBRACE TTERM
-   21 StatementList: StatementList . Statementdash
-   22 Statementdash: . If
-   23              | . For
-   24              | . VariableDecla
-   25 If: . TKIF ConditionalStatement CompoundBloc Else
-   29 For: . TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
-   30    | . TKFOR Declaration TSEMI ConditionalStatement CompoundBloc
-   31    | . TKFOR Declaration CompoundBloc
+   41 Expression: Literal .
 
-    TRBRACE     shift, and go to state 56
-    TKFOR       shift, and go to state 42
-    TKIF        shift, and go to state 43
-    TKVAR       shift, and go to state 7
-    Identifier  shift, and go to state 8
-
-    VariableDecla  go to state 44
-    Statementdash  go to state 57
-    If             go to state 47
-    For            go to state 48
+    $default  reduce using rule 41 (Expression)
 
 
 state 46
+
+   10 VariableDecla: . TKVAR Identifier TEQUAL Literal TTERM
+   11              | . Identifier TSEQUAL Literal TTERM
+   12 Literal: . BoolTrue
+   13        | . BoolFalse
+   14        | . String
+   15        | . Float
+   16        | . Int
+   18 CompoundBloc: TLBRACE TTERM StatementList . TRBRACE TTERM
+   21 StatementList: StatementList . Statementdash
+   22 Statementdash: . VariableDecla
+   23              | . Expression
+   39 Expression: . Identifier TEQUAL Expression
+   40           | . Identifier
+   41           | . Literal
+   42           | . Expression BinaryOperators Expression
+   43           | . TLPAREN Expression TRPAREN
+
+    TLPAREN     shift, and go to state 41
+    TRBRACE     shift, and go to state 53
+    TKVAR       shift, and go to state 7
+    BoolTrue    shift, and go to state 23
+    BoolFalse   shift, and go to state 24
+    String      shift, and go to state 25
+    Float       shift, and go to state 26
+    Int         shift, and go to state 27
+    Identifier  shift, and go to state 43
+
+    VariableDecla  go to state 44
+    Literal        go to state 45
+    Statementdash  go to state 54
+    Expression     go to state 48
+
+
+state 47
 
    20 StatementList: Statementdash .
 
     $default  reduce using rule 20 (StatementList)
 
 
-state 47
-
-   22 Statementdash: If .
-
-    $default  reduce using rule 22 (Statementdash)
-
-
 state 48
 
-   23 Statementdash: For .
+   23 Statementdash: Expression .  [TLPAREN, TRBRACE, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   24 BinaryOperators: . TCEQ
+   25                | . TCNE
+   26                | . TBAND
+   27                | . TBOR
+   28                | . TBXOR
+   29                | . TAND
+   30                | . TOR
+   31                | . TCLE
+   32                | . TCLT
+   33                | . TCGT
+   34                | . TCGE
+   35                | . TMINUS
+   36                | . TPLUS
+   37                | . TMUL
+   38                | . TDIV
+   42 Expression: Expression . BinaryOperators Expression
+
+    TCEQ    shift, and go to state 55
+    TCNE    shift, and go to state 56
+    TCLT    shift, and go to state 57
+    TCLE    shift, and go to state 58
+    TCGT    shift, and go to state 59
+    TCGE    shift, and go to state 60
+    TBAND   shift, and go to state 61
+    TBOR    shift, and go to state 62
+    TBXOR   shift, and go to state 63
+    TAND    shift, and go to state 64
+    TOR     shift, and go to state 65
+    TPLUS   shift, and go to state 66
+    TMINUS  shift, and go to state 67
+    TMUL    shift, and go to state 68
+    TDIV    shift, and go to state 69
 
     $default  reduce using rule 23 (Statementdash)
 
+    BinaryOperators  go to state 70
+
 
 state 49
+
+   39 Expression: Identifier . TEQUAL Expression
+   40           | Identifier .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+
+    TEQUAL  shift, and go to state 52
+
+    $default  reduce using rule 40 (Expression)
+
+
+state 50
+
+   24 BinaryOperators: . TCEQ
+   25                | . TCNE
+   26                | . TBAND
+   27                | . TBOR
+   28                | . TBXOR
+   29                | . TAND
+   30                | . TOR
+   31                | . TCLE
+   32                | . TCLT
+   33                | . TCGT
+   34                | . TCGE
+   35                | . TMINUS
+   36                | . TPLUS
+   37                | . TMUL
+   38                | . TDIV
+   42 Expression: Expression . BinaryOperators Expression
+   43           | TLPAREN Expression . TRPAREN
+
+    TCEQ     shift, and go to state 55
+    TCNE     shift, and go to state 56
+    TCLT     shift, and go to state 57
+    TCLE     shift, and go to state 58
+    TCGT     shift, and go to state 59
+    TCGE     shift, and go to state 60
+    TBAND    shift, and go to state 61
+    TBOR     shift, and go to state 62
+    TBXOR    shift, and go to state 63
+    TAND     shift, and go to state 64
+    TOR      shift, and go to state 65
+    TRPAREN  shift, and go to state 71
+    TPLUS    shift, and go to state 66
+    TMINUS   shift, and go to state 67
+    TMUL     shift, and go to state 68
+    TDIV     shift, and go to state 69
+
+    BinaryOperators  go to state 70
+
+
+state 51
 
    19 CompoundBloc: TLBRACE TTERM TRBRACE TTERM .
 
     $default  reduce using rule 19 (CompoundBloc)
 
 
-state 50
-
-   18 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   19             | . TLBRACE TTERM TRBRACE TTERM
-   29 For: TKFOR Declaration . TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc
-   30    | TKFOR Declaration . TSEMI ConditionalStatement CompoundBloc
-   31    | TKFOR Declaration . CompoundBloc
-
-    TLBRACE  shift, and go to state 38
-    TSEMI    shift, and go to state 58
-
-    CompoundBloc  go to state 59
-
-
-state 51
-
-   46 Operand: Float .
-
-    $default  reduce using rule 46 (Operand)
-
-
 state 52
 
-   45 Operand: Int .
+   12 Literal: . BoolTrue
+   13        | . BoolFalse
+   14        | . String
+   15        | . Float
+   16        | . Int
+   39 Expression: . Identifier TEQUAL Expression
+   39           | Identifier TEQUAL . Expression
+   40           | . Identifier
+   41           | . Literal
+   42           | . Expression BinaryOperators Expression
+   43           | . TLPAREN Expression TRPAREN
 
-    $default  reduce using rule 45 (Operand)
+    TLPAREN     shift, and go to state 41
+    BoolTrue    shift, and go to state 23
+    BoolFalse   shift, and go to state 24
+    String      shift, and go to state 25
+    Float       shift, and go to state 26
+    Int         shift, and go to state 27
+    Identifier  shift, and go to state 49
+
+    Literal     go to state 45
+    Expression  go to state 72
 
 
 state 53
 
-   47 Operand: Identifier .
+   18 CompoundBloc: TLBRACE TTERM StatementList TRBRACE . TTERM
 
-    $default  reduce using rule 47 (Operand)
+    TTERM  shift, and go to state 73
 
 
 state 54
-
-   18 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   19             | . TLBRACE TTERM TRBRACE TTERM
-   25 If: TKIF ConditionalStatement . CompoundBloc Else
-
-    TLBRACE  shift, and go to state 38
-
-    CompoundBloc  go to state 60
-
-
-state 55
-
-   32 ConditionalStatement: Operand . ConditionalOperator Operand
-   33 ConditionalOperator: . TCEQ
-   34                    | . TCNE
-   35                    | . TBAND
-   36                    | . TBOR
-   37                    | . TBXOR
-   38                    | . TAND
-   39                    | . TOR
-   40                    | . TCLE
-   41                    | . TCLT
-   42                    | . TCGT
-   43                    | . TCGE
-   44                    | . TNEG
-
-    TCEQ   shift, and go to state 61
-    TCNE   shift, and go to state 62
-    TCLT   shift, and go to state 63
-    TCLE   shift, and go to state 64
-    TCGT   shift, and go to state 65
-    TCGE   shift, and go to state 66
-    TNEG   shift, and go to state 67
-    TBAND  shift, and go to state 68
-    TBOR   shift, and go to state 69
-    TBXOR  shift, and go to state 70
-    TAND   shift, and go to state 71
-    TOR    shift, and go to state 72
-
-    ConditionalOperator  go to state 73
-
-
-state 56
-
-   18 CompoundBloc: TLBRACE TTERM StatementList TRBRACE . TTERM
-
-    TTERM  shift, and go to state 74
-
-
-state 57
 
    21 StatementList: StatementList Statementdash .
 
     $default  reduce using rule 21 (StatementList)
 
 
+state 55
+
+   24 BinaryOperators: TCEQ .
+
+    $default  reduce using rule 24 (BinaryOperators)
+
+
+state 56
+
+   25 BinaryOperators: TCNE .
+
+    $default  reduce using rule 25 (BinaryOperators)
+
+
+state 57
+
+   32 BinaryOperators: TCLT .
+
+    $default  reduce using rule 32 (BinaryOperators)
+
+
 state 58
 
-   29 For: TKFOR Declaration TSEMI . ConditionalStatement TSEMI IterativeStatement CompoundBloc
-   30    | TKFOR Declaration TSEMI . ConditionalStatement CompoundBloc
-   32 ConditionalStatement: . Operand ConditionalOperator Operand
-   45 Operand: . Int
-   46        | . Float
-   47        | . Identifier
+   31 BinaryOperators: TCLE .
 
-    Float       shift, and go to state 51
-    Int         shift, and go to state 52
-    Identifier  shift, and go to state 53
-
-    ConditionalStatement  go to state 75
-    Operand               go to state 55
+    $default  reduce using rule 31 (BinaryOperators)
 
 
 state 59
 
-   31 For: TKFOR Declaration CompoundBloc .
+   33 BinaryOperators: TCGT .
 
-    $default  reduce using rule 31 (For)
+    $default  reduce using rule 33 (BinaryOperators)
 
 
 state 60
 
-   25 If: TKIF ConditionalStatement CompoundBloc . Else
-   26 Else: . TKELSE If
-   27     | . TKELSE CompoundBloc
-   28     | .  [TRBRACE, TKFOR, TKIF, TKVAR, Identifier]
+   34 BinaryOperators: TCGE .
 
-    TKELSE  shift, and go to state 76
-
-    $default  reduce using rule 28 (Else)
-
-    Else  go to state 77
+    $default  reduce using rule 34 (BinaryOperators)
 
 
 state 61
 
-   33 ConditionalOperator: TCEQ .
+   26 BinaryOperators: TBAND .
 
-    $default  reduce using rule 33 (ConditionalOperator)
+    $default  reduce using rule 26 (BinaryOperators)
 
 
 state 62
 
-   34 ConditionalOperator: TCNE .
+   27 BinaryOperators: TBOR .
 
-    $default  reduce using rule 34 (ConditionalOperator)
+    $default  reduce using rule 27 (BinaryOperators)
 
 
 state 63
 
-   41 ConditionalOperator: TCLT .
+   28 BinaryOperators: TBXOR .
 
-    $default  reduce using rule 41 (ConditionalOperator)
+    $default  reduce using rule 28 (BinaryOperators)
 
 
 state 64
 
-   40 ConditionalOperator: TCLE .
+   29 BinaryOperators: TAND .
 
-    $default  reduce using rule 40 (ConditionalOperator)
+    $default  reduce using rule 29 (BinaryOperators)
 
 
 state 65
 
-   42 ConditionalOperator: TCGT .
+   30 BinaryOperators: TOR .
 
-    $default  reduce using rule 42 (ConditionalOperator)
+    $default  reduce using rule 30 (BinaryOperators)
 
 
 state 66
 
-   43 ConditionalOperator: TCGE .
+   36 BinaryOperators: TPLUS .
 
-    $default  reduce using rule 43 (ConditionalOperator)
+    $default  reduce using rule 36 (BinaryOperators)
 
 
 state 67
 
-   44 ConditionalOperator: TNEG .
+   35 BinaryOperators: TMINUS .
 
-    $default  reduce using rule 44 (ConditionalOperator)
+    $default  reduce using rule 35 (BinaryOperators)
 
 
 state 68
 
-   35 ConditionalOperator: TBAND .
+   37 BinaryOperators: TMUL .
 
-    $default  reduce using rule 35 (ConditionalOperator)
+    $default  reduce using rule 37 (BinaryOperators)
 
 
 state 69
 
-   36 ConditionalOperator: TBOR .
+   38 BinaryOperators: TDIV .
 
-    $default  reduce using rule 36 (ConditionalOperator)
+    $default  reduce using rule 38 (BinaryOperators)
 
 
 state 70
 
-   37 ConditionalOperator: TBXOR .
+   12 Literal: . BoolTrue
+   13        | . BoolFalse
+   14        | . String
+   15        | . Float
+   16        | . Int
+   39 Expression: . Identifier TEQUAL Expression
+   40           | . Identifier
+   41           | . Literal
+   42           | . Expression BinaryOperators Expression
+   42           | Expression BinaryOperators . Expression
+   43           | . TLPAREN Expression TRPAREN
 
-    $default  reduce using rule 37 (ConditionalOperator)
+    TLPAREN     shift, and go to state 41
+    BoolTrue    shift, and go to state 23
+    BoolFalse   shift, and go to state 24
+    String      shift, and go to state 25
+    Float       shift, and go to state 26
+    Int         shift, and go to state 27
+    Identifier  shift, and go to state 49
+
+    Literal     go to state 45
+    Expression  go to state 74
 
 
 state 71
 
-   38 ConditionalOperator: TAND .
+   43 Expression: TLPAREN Expression TRPAREN .
 
-    $default  reduce using rule 38 (ConditionalOperator)
+    $default  reduce using rule 43 (Expression)
 
 
 state 72
 
-   39 ConditionalOperator: TOR .
+   24 BinaryOperators: . TCEQ
+   25                | . TCNE
+   26                | . TBAND
+   27                | . TBOR
+   28                | . TBXOR
+   29                | . TAND
+   30                | . TOR
+   31                | . TCLE
+   32                | . TCLT
+   33                | . TCGT
+   34                | . TCGE
+   35                | . TMINUS
+   36                | . TPLUS
+   37                | . TMUL
+   38                | . TDIV
+   39 Expression: Identifier TEQUAL Expression .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   42           | Expression . BinaryOperators Expression
 
-    $default  reduce using rule 39 (ConditionalOperator)
+    TCEQ    shift, and go to state 55
+    TCNE    shift, and go to state 56
+    TCLT    shift, and go to state 57
+    TCLE    shift, and go to state 58
+    TCGT    shift, and go to state 59
+    TCGE    shift, and go to state 60
+    TBAND   shift, and go to state 61
+    TBOR    shift, and go to state 62
+    TBXOR   shift, and go to state 63
+    TAND    shift, and go to state 64
+    TOR     shift, and go to state 65
+    TPLUS   shift, and go to state 66
+    TMINUS  shift, and go to state 67
+    TMUL    shift, and go to state 68
+    TDIV    shift, and go to state 69
+
+    TCEQ      [reduce using rule 39 (Expression)]
+    TCNE      [reduce using rule 39 (Expression)]
+    TCLT      [reduce using rule 39 (Expression)]
+    TCLE      [reduce using rule 39 (Expression)]
+    TCGT      [reduce using rule 39 (Expression)]
+    TCGE      [reduce using rule 39 (Expression)]
+    TBAND     [reduce using rule 39 (Expression)]
+    TBOR      [reduce using rule 39 (Expression)]
+    TBXOR     [reduce using rule 39 (Expression)]
+    TAND      [reduce using rule 39 (Expression)]
+    TOR       [reduce using rule 39 (Expression)]
+    TPLUS     [reduce using rule 39 (Expression)]
+    TMINUS    [reduce using rule 39 (Expression)]
+    TMUL      [reduce using rule 39 (Expression)]
+    TDIV      [reduce using rule 39 (Expression)]
+    $default  reduce using rule 39 (Expression)
+
+    BinaryOperators  go to state 70
 
 
 state 73
-
-   32 ConditionalStatement: Operand ConditionalOperator . Operand
-   45 Operand: . Int
-   46        | . Float
-   47        | . Identifier
-
-    Float       shift, and go to state 51
-    Int         shift, and go to state 52
-    Identifier  shift, and go to state 53
-
-    Operand  go to state 78
-
-
-state 74
 
    18 CompoundBloc: TLBRACE TTERM StatementList TRBRACE TTERM .
 
     $default  reduce using rule 18 (CompoundBloc)
 
 
-state 75
-
-   18 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   19             | . TLBRACE TTERM TRBRACE TTERM
-   29 For: TKFOR Declaration TSEMI ConditionalStatement . TSEMI IterativeStatement CompoundBloc
-   30    | TKFOR Declaration TSEMI ConditionalStatement . CompoundBloc
-
-    TLBRACE  shift, and go to state 38
-    TSEMI    shift, and go to state 79
-
-    CompoundBloc  go to state 80
-
-
-state 76
-
-   18 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   19             | . TLBRACE TTERM TRBRACE TTERM
-   25 If: . TKIF ConditionalStatement CompoundBloc Else
-   26 Else: TKELSE . If
-   27     | TKELSE . CompoundBloc
-
-    TLBRACE  shift, and go to state 38
-    TKIF     shift, and go to state 43
-
-    CompoundBloc  go to state 81
-    If            go to state 82
-
-
-state 77
-
-   25 If: TKIF ConditionalStatement CompoundBloc Else .
-
-    $default  reduce using rule 25 (If)
-
-
-state 78
-
-   32 ConditionalStatement: Operand ConditionalOperator Operand .
-
-    $default  reduce using rule 32 (ConditionalStatement)
-
-
-state 79
-
-   29 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI . IterativeStatement CompoundBloc
-   48 IterativeStatement: . AssignmentStatement
-   49 AssignmentStatement: . Identifier TEQUAL ArithmeticStatement
-
-    Identifier  shift, and go to state 83
-
-    IterativeStatement   go to state 84
-    AssignmentStatement  go to state 85
-
-
-state 80
-
-   30 For: TKFOR Declaration TSEMI ConditionalStatement CompoundBloc .
-
-    $default  reduce using rule 30 (For)
-
-
-state 81
-
-   27 Else: TKELSE CompoundBloc .
-
-    $default  reduce using rule 27 (Else)
-
-
-state 82
-
-   26 Else: TKELSE If .
-
-    $default  reduce using rule 26 (Else)
-
-
-state 83
-
-   49 AssignmentStatement: Identifier . TEQUAL ArithmeticStatement
-
-    TEQUAL  shift, and go to state 86
-
-
-state 84
-
-   18 CompoundBloc: . TLBRACE TTERM StatementList TRBRACE TTERM
-   19             | . TLBRACE TTERM TRBRACE TTERM
-   29 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement . CompoundBloc
-
-    TLBRACE  shift, and go to state 38
-
-    CompoundBloc  go to state 87
-
-
-state 85
-
-   48 IterativeStatement: AssignmentStatement .
-
-    $default  reduce using rule 48 (IterativeStatement)
-
-
-state 86
-
-   12 Literal: . BoolTrue
-   13        | . BoolFalse
-   14        | . String
-   15        | . Float
-   16        | . Int
-   49 AssignmentStatement: Identifier TEQUAL . ArithmeticStatement
-   50 ArithmeticStatement: . Identifier ArithOper Identifier
-   51                    | . Identifier ArithOper Literal
-   52                    | . Literal ArithOper Identifier
-   53                    | . Literal ArithOper Literal
-
-    BoolTrue    shift, and go to state 23
-    BoolFalse   shift, and go to state 24
-    String      shift, and go to state 25
-    Float       shift, and go to state 26
-    Int         shift, and go to state 27
-    Identifier  shift, and go to state 88
-
-    Literal              go to state 89
-    ArithmeticStatement  go to state 90
-
-
-state 87
-
-   29 For: TKFOR Declaration TSEMI ConditionalStatement TSEMI IterativeStatement CompoundBloc .
-
-    $default  reduce using rule 29 (For)
-
-
-state 88
-
-   50 ArithmeticStatement: Identifier . ArithOper Identifier
-   51                    | Identifier . ArithOper Literal
-   54 ArithOper: . TMINUS
-   55          | . TPLUS
-   56          | . TMUL
-   57          | . TDIV
-
-    TPLUS   shift, and go to state 91
-    TMINUS  shift, and go to state 92
-    TMUL    shift, and go to state 93
-    TDIV    shift, and go to state 94
-
-    ArithOper  go to state 95
-
-
-state 89
-
-   52 ArithmeticStatement: Literal . ArithOper Identifier
-   53                    | Literal . ArithOper Literal
-   54 ArithOper: . TMINUS
-   55          | . TPLUS
-   56          | . TMUL
-   57          | . TDIV
-
-    TPLUS   shift, and go to state 91
-    TMINUS  shift, and go to state 92
-    TMUL    shift, and go to state 93
-    TDIV    shift, and go to state 94
-
-    ArithOper  go to state 96
-
-
-state 90
-
-   49 AssignmentStatement: Identifier TEQUAL ArithmeticStatement .
-
-    $default  reduce using rule 49 (AssignmentStatement)
-
-
-state 91
-
-   55 ArithOper: TPLUS .
-
-    $default  reduce using rule 55 (ArithOper)
-
-
-state 92
-
-   54 ArithOper: TMINUS .
-
-    $default  reduce using rule 54 (ArithOper)
-
-
-state 93
-
-   56 ArithOper: TMUL .
-
-    $default  reduce using rule 56 (ArithOper)
-
-
-state 94
-
-   57 ArithOper: TDIV .
-
-    $default  reduce using rule 57 (ArithOper)
-
-
-state 95
-
-   12 Literal: . BoolTrue
-   13        | . BoolFalse
-   14        | . String
-   15        | . Float
-   16        | . Int
-   50 ArithmeticStatement: Identifier ArithOper . Identifier
-   51                    | Identifier ArithOper . Literal
-
-    BoolTrue    shift, and go to state 23
-    BoolFalse   shift, and go to state 24
-    String      shift, and go to state 25
-    Float       shift, and go to state 26
-    Int         shift, and go to state 27
-    Identifier  shift, and go to state 97
-
-    Literal  go to state 98
-
-
-state 96
-
-   12 Literal: . BoolTrue
-   13        | . BoolFalse
-   14        | . String
-   15        | . Float
-   16        | . Int
-   52 ArithmeticStatement: Literal ArithOper . Identifier
-   53                    | Literal ArithOper . Literal
-
-    BoolTrue    shift, and go to state 23
-    BoolFalse   shift, and go to state 24
-    String      shift, and go to state 25
-    Float       shift, and go to state 26
-    Int         shift, and go to state 27
-    Identifier  shift, and go to state 99
-
-    Literal  go to state 100
-
-
-state 97
-
-   50 ArithmeticStatement: Identifier ArithOper Identifier .
-
-    $default  reduce using rule 50 (ArithmeticStatement)
-
-
-state 98
-
-   51 ArithmeticStatement: Identifier ArithOper Literal .
-
-    $default  reduce using rule 51 (ArithmeticStatement)
-
-
-state 99
-
-   52 ArithmeticStatement: Literal ArithOper Identifier .
-
-    $default  reduce using rule 52 (ArithmeticStatement)
-
-
-state 100
-
-   53 ArithmeticStatement: Literal ArithOper Literal .
-
-    $default  reduce using rule 53 (ArithmeticStatement)
+state 74
+
+   24 BinaryOperators: . TCEQ
+   25                | . TCNE
+   26                | . TBAND
+   27                | . TBOR
+   28                | . TBXOR
+   29                | . TAND
+   30                | . TOR
+   31                | . TCLE
+   32                | . TCLT
+   33                | . TCGT
+   34                | . TCGE
+   35                | . TMINUS
+   36                | . TPLUS
+   37                | . TMUL
+   38                | . TDIV
+   42 Expression: Expression . BinaryOperators Expression  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+   42           | Expression BinaryOperators Expression .  [TCEQ, TCNE, TCLT, TCLE, TCGT, TCGE, TBAND, TBOR, TBXOR, TAND, TOR, TLPAREN, TRPAREN, TRBRACE, TPLUS, TMINUS, TMUL, TDIV, TKVAR, BoolTrue, BoolFalse, String, Float, Int, Identifier]
+
+    TCEQ    shift, and go to state 55
+    TCNE    shift, and go to state 56
+    TCLT    shift, and go to state 57
+    TCLE    shift, and go to state 58
+    TCGT    shift, and go to state 59
+    TCGE    shift, and go to state 60
+    TBAND   shift, and go to state 61
+    TBOR    shift, and go to state 62
+    TBXOR   shift, and go to state 63
+    TAND    shift, and go to state 64
+    TOR     shift, and go to state 65
+    TPLUS   shift, and go to state 66
+    TMINUS  shift, and go to state 67
+    TMUL    shift, and go to state 68
+    TDIV    shift, and go to state 69
+
+    TCEQ      [reduce using rule 42 (Expression)]
+    TCNE      [reduce using rule 42 (Expression)]
+    TCLT      [reduce using rule 42 (Expression)]
+    TCLE      [reduce using rule 42 (Expression)]
+    TCGT      [reduce using rule 42 (Expression)]
+    TCGE      [reduce using rule 42 (Expression)]
+    TBAND     [reduce using rule 42 (Expression)]
+    TBOR      [reduce using rule 42 (Expression)]
+    TBXOR     [reduce using rule 42 (Expression)]
+    TAND      [reduce using rule 42 (Expression)]
+    TOR       [reduce using rule 42 (Expression)]
+    TPLUS     [reduce using rule 42 (Expression)]
+    TMINUS    [reduce using rule 42 (Expression)]
+    TMUL      [reduce using rule 42 (Expression)]
+    TDIV      [reduce using rule 42 (Expression)]
+    $default  reduce using rule 42 (Expression)
+
+    BinaryOperators  go to state 70

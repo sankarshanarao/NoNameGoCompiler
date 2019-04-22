@@ -1,0 +1,15 @@
+If:
+    TKIF ConditionalExp CompoundBloc
+    Else
+    ;
+Else:
+    TKELSE If
+    | TKELSE CompoundBloc
+    |
+    ;
+
+For:
+    TKFOR Declaration TSEMI ConditionalExp TSEMI IterativeStatement CompoundBloc
+    | TKFOR Declaration TSEMI ConditionalExp CompoundBloc
+    | TKFOR Declaration CompoundBloc
+    ;

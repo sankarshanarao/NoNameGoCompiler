@@ -98,18 +98,44 @@ class NBinOp: public NExpression {
             type(type), op1(op1), op2(op2) { }
 };
 
+
 class NAssign: public NExpression {
     public:
         NIdentifier &lhs;
         NExpression &rhs;
 
         NAssign(NIdentifier &lhs, NExpression &rhs): lhs(lhs), rhs(rhs) { }
+
+        virtual int printJSON() {
+        
+            return 0;
+        }
 };
 
 class NBlock : public NExpression {
 public:
     StatementList statements;
     NBlock() { }
+
+    virtual int printJSON() {
+        std::cout<<"{\"opt\": \"compoundBlock\",";
+
+        std::cout<<"\"statements\":[";
+
+        for(StatementList::iterator it = statements.begin(); it != statements.end(); ++it) {
+            // std::cout<<"Statement";
+            if (it!=statements.begin()) {
+                std::cout<<",";
+            }
+            (*it)->printJSON();
+            
+        }
+
+        std::cout<<"]";
+
+        std::cout<<"}";
+        return 0;
+    }
 };
 
 class NExpressionStatement : public NStatement {
@@ -131,7 +157,7 @@ public:
     
     virtual int printJSON() {
 
-        std::cout<<"{\"opt\":\"varDecl\", \"type\":"<<"\"";
+        std::cout<<"{\"opt\":\"varDeclState\", \"type\":"<<"\"";
         type.printJSON();
         std::cout<<"\",";
 
@@ -154,6 +180,13 @@ class NGlobalBlock : public NBlock {
         int printJSON() {
             std::cout<<"{ \"package\": \""<<packageName<<"\","<<std::endl;
 
+            std::cout<<"\"mainBlock\":";
+
+            mainBlock->printJSON();
+
+            std::cout<<"}\n";
             return 0;
         }
 };
+
+
